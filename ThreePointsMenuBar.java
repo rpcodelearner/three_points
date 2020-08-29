@@ -1,26 +1,23 @@
 package ex.rfusr.ex02_3Points;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ThreePointsMenuBar extends JMenuBar {
-    private static final boolean SELECTED = true;
-    private static final boolean NOT_SELECTED = false;
-    private final ButtonGroup patterns = new ButtonGroup();
     private final ThreePointsModel model;
     private final JPanel view;
     private JTextField numPointsInputField;
+    private JComboBox<String> patternCtrl;
+    private JComboBox<String> drawingCtrl;
 
     public ThreePointsMenuBar(ThreePointsModel model, JPanel view) {
         this.model = model;
         this.view = view;
         this.add(new JLabel(" Focus points: "));
-        this.setMargin(new Insets(0, 1, 10, 1));
 
         addNumPointTextField(model);
         addPatternsCtrl();
-        addGraphicMenu();
+        addGraphicsMenu();
     }
 
     private void addNumPointTextField(ThreePointsModel model) {
@@ -31,29 +28,32 @@ public class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void addPatternsCtrl() {
-        this.add(new JLabel(" Pattern: "));
-        addRadioButtonItem("Regular", SELECTED);
-        addRadioButtonItem("Random", NOT_SELECTED);
-        addRadioButtonItem("Aligned", NOT_SELECTED);
-    }
-
-    private void addRadioButtonItem(String text, boolean isSelected) {
-        JRadioButtonMenuItem btn = new JRadioButtonMenuItem(text, isSelected);
-        patterns.add(btn);
-        this.add(btn);
-        btn.addActionListener(this::selectPattern);
-    }
-
-    private void addGraphicMenu() {
-        // TODO allow to select features of the drawing, like thickness, shading, step...
-        //  or combinations of the above, like "thick", "fine", "shaded"
+        String[] patterns = model.getFociPatterns();
+        patternCtrl = new JComboBox<>(patterns);
+        this.add(patternCtrl);
+        patternCtrl.setSelectedItem(patterns[0]);
+        patternCtrl.addActionListener(this::selectPattern);
     }
 
     public void selectPattern(ActionEvent choice) {
         tryGettingAndForwardingNumPoints();
-        model.selector.selectPattern(choice);
+        model.selector.selectPattern((String) patternCtrl.getSelectedItem());
         view.repaint();
     }
+
+    private void addGraphicsMenu() {
+        drawingCtrl = new JComboBox<>(model.getDrawingStyles());
+        this.add(drawingCtrl);
+        drawingCtrl.setSelectedItem(model.getDrawingStyles()[0]);
+        drawingCtrl.addActionListener(this::selectDrawingStyle);
+    }
+
+    private void selectDrawingStyle(ActionEvent actionEvent) {
+        tryGettingAndForwardingNumPoints();
+        model.setDrawingStyle((String) drawingCtrl.getSelectedItem());
+        view.repaint();
+    }
+
 
     private void changePointsNumber(ActionEvent textInput) {
         tryGettingAndForwardingNumPoints();

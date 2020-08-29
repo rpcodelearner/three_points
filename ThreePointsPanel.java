@@ -49,13 +49,4 @@ public class ThreePointsPanel extends JPanel {
         foci.forEach(pixel -> g2d.fillOval(pixel.x, pixel.y, size, size));
     }
 
-    private Color getColorShade(Integer intSumDist) {
-        int averageDistance = intSumDist / model.getNumPts();
-        int maxDistOnScreen = Math.max(XSIZE, YSIZE);
-        final int maxColor = 256;
-        int shade = (maxColor * averageDistance) / maxDistOnScreen;
-        return new Color(shade, shade, shade);
-    }
-
-
 }

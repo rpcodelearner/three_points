@@ -3,7 +3,6 @@ package ex.rfusr.ex02_3Points;
 
 import ex.rfusr.ex02_3Points.PlaneScreenCoordinates.PlanePoint;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +11,10 @@ public class ThreePointsModel {
     static final double RADIUS = 2.0 / 3; // tuned for viewing
     static List<PlanePoint> focusPoints = null;
     final PatternSelector selector = new PatternSelector();
+    final BandsStyle bandsStyle = new BandsStyle();
     private final double xCenter = 0.0;
     private final double yCenter = 0.0;
-    private int numPts = 3; // default
+    private int numPts = 3; // this default gives the app its name
 
     public List<PlanePoint> getPoints() {
         if (focusPoints == null)
@@ -33,6 +33,14 @@ public class ThreePointsModel {
         selector.computePoints();
     }
 
+    public String[] getDrawingStyles() {
+        return bandsStyle.drawingStyles;
+    }
+
+    public void setDrawingStyle(String style) {
+        bandsStyle.setStyle(style);
+    }
+
 
     private double computeSumDistance(PlanePoint point) {
         if (focusPoints == null)
@@ -45,14 +53,9 @@ public class ThreePointsModel {
         return dist;
     }
 
-    // TODO this method reasons about visibility: should the "blackness duty cycle" be guided from outside?
     public boolean isWithinBand(PlanePoint point) {
         double totDist = computeSumDistance(point);
-
-        final int precision = 1000;
-        final int step = 500;
-        final int thickness = 256;
-        return (int) (totDist * precision) % step <= thickness;
+        return (totDist * bandsStyle.precision) % bandsStyle.step <= bandsStyle.thickness;
     }
 
     private void computeRegularPoints() {
@@ -106,12 +109,16 @@ public class ThreePointsModel {
         } while (i < numPts);
     }
 
+    public String[] getFociPatterns() {
+        return selector.patterns;
+    }
+
     class PatternSelector {
+        private final String[] patterns = new String[]{"Regular", "Random", "Aligned"};
+        private String pattern = "Regular";
 
-        private String pattern = "Regular"; // default choice
-
-        public void selectPattern(ActionEvent choice) {
-            pattern = choice.getActionCommand();
+        public void selectPattern(String choice) {
+            pattern = choice;
             computePoints();
         }
 
@@ -131,6 +138,37 @@ public class ThreePointsModel {
             }
         }
 
+    }
+
+    static class BandsStyle {
+        private final String[] drawingStyles = {"Thick", "Medium", "Fine"};
+        private final int precision = 1000;
+        private int step;
+        private int thickness;
+
+        public BandsStyle() {
+            setStyle("Thick");
+        }
+
+        public void setStyle(String style) {
+            switch (style) {
+                case "Thick":
+                    step = 300;
+                    thickness = 100;
+                    break;
+                case "Medium":
+                    step = 42;
+                    thickness = 10;
+                    break;
+                case "Fine":
+                    step = 60;
+                    thickness = 5;
+                    break;
+                default:
+                    System.err.println("Undefined drawing style: " + style);
+            }
+
+        }
     }
 
 }

@@ -5,10 +5,8 @@ import javax.swing.*;
 import static javax.swing.SwingUtilities.*;
 
 // TODO list
-// - reconsider where createAndSetupWindow() and createAndShowGUI() belong
-// - implement a shading policy for the bands
-// - improve the drawing of the level curves, for example ensure no gaps in drawing
-// - adjust plotted area according to window resizing
+// - reconsider where createAndSetupWindow() and createAndShowGUI() should belong
+// - manage window resizing
 // NICE TO HAVE
 // - improve the Look and Feel of the menu bar
 // - add key controls: ESC -> Exit, +/- -> add/remove a focus and redraw, F5 -> force redraw (makes sense for RND positions)
