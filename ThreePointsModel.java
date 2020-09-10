@@ -113,33 +113,6 @@ public class ThreePointsModel {
         return selector.patterns;
     }
 
-    class PatternSelector {
-        private final String[] patterns = new String[]{"Regular", "Random", "Aligned"};
-        private String pattern = "Regular";
-
-        public void selectPattern(String choice) {
-            pattern = choice;
-            computePoints();
-        }
-
-        void computePoints() {
-            switch (pattern) {
-                case "Regular":
-                    computeRegularPoints();
-                    break;
-                case "Random":
-                    computeRandomPoints();
-                    break;
-                case "Aligned":
-                    computeAlignedPoints();
-                    break;
-                default:
-                    System.err.println("undefined pattern for focus points: " + pattern);
-            }
-        }
-
-    }
-
     static class BandsStyle {
         private final String[] drawingStyles = {"Thick", "Medium", "Fine"};
         private final int precision = 1000;
@@ -169,6 +142,33 @@ public class ThreePointsModel {
             }
 
         }
+    }
+
+    class PatternSelector {
+        private final String[] patterns = new String[]{"Regular", "Random", "Aligned"};
+        private String pattern = "Regular";
+
+        public void selectPattern(String choice) {
+            pattern = choice;
+            computePoints();
+        }
+
+        void computePoints() {
+            switch (pattern) {
+                case "Regular":
+                    computeRegularPoints();
+                    break;
+                case "Random":
+                    computeRandomPoints();
+                    break;
+                case "Aligned":
+                    computeAlignedPoints();
+                    break;
+                default:
+                    System.err.println("undefined pattern for focus points: " + pattern);
+            }
+        }
+
     }
 
 }

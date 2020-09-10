@@ -13,10 +13,14 @@ public class ThreePointsMenuBar extends JMenuBar {
     public ThreePointsMenuBar(ThreePointsModel model, JPanel view) {
         this.model = model;
         this.view = view;
-        this.add(new JLabel(" Focus points: "));
 
+        this.add(new JLabel(" Focus points: "));
         addNumPointTextField(model);
+
+        this.add(new JLabel(" Foci pattern: "));
         addPatternsCtrl();
+
+        this.add(new JLabel(" Drawing: "));
         addGraphicsMenu();
     }
 

@@ -2,13 +2,12 @@ package ex.rfusr.ex02_3Points;
 
 import javax.swing.*;
 
-import static javax.swing.SwingUtilities.*;
+import static javax.swing.SwingUtilities.invokeLater;
 
 // TODO list
 // - reconsider where createAndSetupWindow() and createAndShowGUI() should belong
 // - manage window resizing
 // NICE TO HAVE
-// - improve the Look and Feel of the menu bar
 // - add key controls: ESC -> Exit, +/- -> add/remove a focus and redraw, F5 -> force redraw (makes sense for RND positions)
 
 public class ThreePoints {
@@ -16,6 +15,10 @@ public class ThreePoints {
     public ThreePoints() {
         final ThreePointsModel model = new ThreePointsModel();
         invokeLater(() -> createAndShowGUI(model));
+    }
+
+    public static void main(String[] args) {
+        new ThreePoints();
     }
 
     private void createAndShowGUI(ThreePointsModel model) {
@@ -36,10 +39,6 @@ public class ThreePoints {
         frame.setUndecorated(false);
         frame.setTitle("Bands of constant sum of distances from the red points");
         return frame;
-    }
-
-    public static void main(String[] args) {
-        new ThreePoints();
     }
 
 }
