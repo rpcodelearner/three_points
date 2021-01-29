@@ -1,4 +1,4 @@
-package ex.rfusr.ex02_3Points;
+package com.github.rpcodelearner;
 
 
 /**

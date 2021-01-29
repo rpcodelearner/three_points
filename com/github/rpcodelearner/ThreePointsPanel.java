@@ -1,6 +1,6 @@
-package ex.rfusr.ex02_3Points;
+package com.github.rpcodelearner;
 
-import ex.rfusr.ex02_3Points.PlaneScreenCoordinates.Pixel;
+import com.github.rpcodelearner.PlaneScreenCoordinates.Pixel;
 
 import javax.swing.*;
 import java.awt.*;

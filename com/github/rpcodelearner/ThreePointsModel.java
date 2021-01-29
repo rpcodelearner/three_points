@@ -1,7 +1,7 @@
-package ex.rfusr.ex02_3Points;
+package com.github.rpcodelearner;
 
 
-import ex.rfusr.ex02_3Points.PlaneScreenCoordinates.PlanePoint;
+import com.github.rpcodelearner.PlaneScreenCoordinates.PlanePoint;
 
 import java.util.ArrayList;
 import java.util.List;
