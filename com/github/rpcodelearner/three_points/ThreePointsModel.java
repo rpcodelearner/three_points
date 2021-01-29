@@ -1,7 +1,7 @@
-package com.github.rpcodelearner;
+package com.github.rpcodelearner.three_points;
 
 
-import com.github.rpcodelearner.PlaneScreenCoordinates.PlanePoint;
+import com.github.rpcodelearner.three_points.PlaneScreenCoordinates.PlanePoint;
 
 import java.util.ArrayList;
 import java.util.List;

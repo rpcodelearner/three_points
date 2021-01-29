@@ -1,4 +1,4 @@
-package com.github.rpcodelearner;
+package com.github.rpcodelearner.three_points;
 
 
 /**

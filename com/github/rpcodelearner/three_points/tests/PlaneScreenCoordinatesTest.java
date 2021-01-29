@@ -1,7 +1,8 @@
-package com.github.rpcodelearner;
+package com.github.rpcodelearner.three_points.tests;
 
 
-import com.github.rpcodelearner.PlaneScreenCoordinates.Pixel;
+import com.github.rpcodelearner.three_points.PlaneScreenCoordinates;
+import com.github.rpcodelearner.three_points.PlaneScreenCoordinates.Pixel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -89,7 +90,7 @@ public class PlaneScreenCoordinatesTest {
     }
 
     // TODO run twice every test by using JUnit parameterized testing (or whatever their name is in JUnit 5)
-    // possible src: www.baeldung.com/parameterized-com.github.rpcodelearner.tests-junit-5
+    // possible src: www.baeldung.com/parameterized-com.github.rpcodelearner.three_points.tests-junit-5
     @Test
     public void differentRanges() {
 

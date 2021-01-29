@@ -1,6 +1,6 @@
-package com.github.rpcodelearner;
+package com.github.rpcodelearner.three_points;
 
-import com.github.rpcodelearner.PlaneScreenCoordinates.Pixel;
+import com.github.rpcodelearner.three_points.PlaneScreenCoordinates.Pixel;
 
 import javax.swing.*;
 import java.awt.*;
