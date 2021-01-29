@@ -1,0 +1,5 @@
+TODO list
+    - reconsider where createAndSetupWindow() and createAndShowGUI() should belong
+    - manage window resizing
+    NICE TO HAVE
+    - add key controls: ESC -> Exit, +/- -> add/remove a focus and redraw, F5 -> force redraw (makes sense for RND positions)
