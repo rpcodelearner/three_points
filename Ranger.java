@@ -6,16 +6,19 @@ public class Ranger {
     private final int lastPixel;
     private final double minReal;
     private final double maxReal;
+    private final double pixelSize;
+
 
     public Ranger(int firstPixel, int lastPixel, double minReal, double maxReal) {
         this.firstPixel = firstPixel;
         this.lastPixel = lastPixel;
         this.minReal = minReal;
         this.maxReal = maxReal;
+        pixelSize = (maxReal - minReal) / (lastPixel - firstPixel);
     }
 
     public int toPixel(double x) {
-        return (int) (firstPixel + (x - minReal) * (lastPixel - firstPixel) / (maxReal - minReal));
+        return (int) Math.round(firstPixel + (x - minReal) / pixelSize);
     }
 
     public double toMath(int p) {
