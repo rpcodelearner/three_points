@@ -1,4 +1,5 @@
 TODO list
+    - replace PlaneScreenCoordinates with (two) Ranger, at least in ThreePoints
     - reconsider where createAndSetupWindow() and createAndShowGUI() should belong
     - manage window resizing
     NICE TO HAVE
