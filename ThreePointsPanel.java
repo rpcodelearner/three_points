@@ -41,12 +41,12 @@ class ThreePointsPanel extends JPanel {
     }
 
     private void paintFocuses(Graphics2D g2d) {
-        final int size = 4;
+        final int half_size = 2;
         g2d.setColor(Color.RED);
 
         List<Pixel> foci;
         foci = model.getPoints().stream().map(coords::planePointToPixel).collect(Collectors.toList());
-        foci.forEach(pixel -> g2d.fillOval(pixel.x, pixel.y, size, size));
+        foci.forEach(pixel -> g2d.fillOval(pixel.x - half_size, pixel.y -half_size, 2*half_size, 2*half_size));
     }
 
 }
