@@ -3,7 +3,7 @@ package com.github.rpcodelearner.three_points;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ThreePointsMenuBar extends JMenuBar {
+class ThreePointsMenuBar extends JMenuBar {
     private final ThreePointsModel model;
     private final JPanel view;
     private JTextField numPointsInputField;

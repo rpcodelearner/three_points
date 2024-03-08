@@ -27,7 +27,7 @@ public class ThreePoints {
         window.setVisible(true);
     }
 
-    public JFrame createAndSetupWindow() {
+    private JFrame createAndSetupWindow() {
         JFrame frame = new JFrame();
         frame.setLocation(800, 150);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

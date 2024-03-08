@@ -8,7 +8,7 @@ import com.github.rpcodelearner.three_points.plot.RasterMaster;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThreePointsModel {
+class ThreePointsModel {
 
     static final double RADIUS = 2.0 / 3; // tuned for viewing
     static List<PlanePoint> focusPoints = null;

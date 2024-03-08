@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class ThreePointsPanel extends JPanel {
+class ThreePointsPanel extends JPanel {
     static final int XSIZE = 500;
     static final int YSIZE = 500;
     private final ThreePointsModel model;
