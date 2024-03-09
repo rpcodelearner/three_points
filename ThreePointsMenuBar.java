@@ -14,7 +14,7 @@ class ThreePointsMenuBar extends JMenuBar {
         this.model = model;
         this.view = view;
 
-        this.add(new JLabel(" Focus points: "));
+        this.add(new JLabel(" Focal points: "));
         addNumPointTextField(model);
 
         this.add(new JLabel(" Foci pattern: "));
@@ -48,7 +48,6 @@ class ThreePointsMenuBar extends JMenuBar {
     private void addGraphicsMenu() {
         drawingCtrl = new JComboBox<>(model.getDrawingStyles());
         this.add(drawingCtrl);
-        drawingCtrl.setSelectedItem(model.getDrawingStyles()[0]);
         drawingCtrl.addActionListener(this::selectDrawingStyle);
     }
 
