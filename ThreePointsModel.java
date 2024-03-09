@@ -4,25 +4,40 @@ package com.github.rpcodelearner.three_points;
 import com.github.rpcodelearner.three_points.PlaneScreenCoordinates.PlanePoint;
 import com.github.rpcodelearner.three_points.plot.RasterMaster;
 
-
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 class ThreePointsModel {
 
-    static final double RADIUS = 2.0 / 3; // tuned for viewing
-    static List<PlanePoint> focusPoints = null;
+    private static final double RADIUS = 2.0 / 3; // tuned for viewing
+    private static final int PRECISION = 1000;
+    static List<PlanePoint> focalPoints = null;
     final PatternSelector selector = new PatternSelector();
-    final BandsStyle bandsStyle = new BandsStyle();
+    final EnumMap<DrawingStyle, Integer> steps;
+    final EnumMap<DrawingStyle, Integer> thicknesses;
     private final double xCenter = 0.0;
     private final double yCenter = 0.0;
+    private final RasterMaster rasterMaker = new RasterMaster(2.0 / 512);
+    private DrawingStyle currentDrawingStyle = DrawingStyle.THICK;
     private int numPts = 3; // this default gives the app its name
-    private RasterMaster rasterMaker = new RasterMaster(2.0/512);
 
-    public List<PlanePoint> getPoints() {
-        if (focusPoints == null)
-            selector.computePoints();
-        return focusPoints;
+    ThreePointsModel() {
+        steps = new EnumMap<>(DrawingStyle.class);
+        steps.put(DrawingStyle.THICK, 300);
+        steps.put(DrawingStyle.MEDIUM, 42);
+        steps.put(DrawingStyle.FINE, 60);
+        steps.put(DrawingStyle.PRECISION, null);
+        thicknesses = new EnumMap<>(DrawingStyle.class);
+        thicknesses.put(DrawingStyle.THICK, 100);
+        thicknesses.put(DrawingStyle.MEDIUM, 10);
+        thicknesses.put(DrawingStyle.FINE, 5);
+        thicknesses.put(DrawingStyle.PRECISION, null);
+    }
+
+    public List<PlanePoint> getFoci() {
+        if (focalPoints == null) selector.computePoints();
+        return focalPoints;
     }
 
     public int getNumPts() {
@@ -30,73 +45,67 @@ class ThreePointsModel {
     }
 
     public void setNumPts(int num) {
-        if (num < 1)
-            return;
+        if (num < 1) return;
         this.numPts = num;
         selector.computePoints();
     }
 
     public String[] getDrawingStyles() {
-        return bandsStyle.drawingStyles;
+        List<String> list = new ArrayList<>();
+        for (DrawingStyle ds : DrawingStyle.values()) list.add(ds.name);
+        return list.toArray(new String[0]);
     }
 
     public void setDrawingStyle(String style) {
-        bandsStyle.setStyle(style);
+        for (DrawingStyle ds : DrawingStyle.values()) if (ds.name.equals(style)) currentDrawingStyle = ds;
     }
 
 
     private double computeSumDistance(PlanePoint point) {
-        if (focusPoints == null)
-            selector.computePoints();
+        if (focalPoints == null) selector.computePoints();
         double dist = 0.0;
-        for (PlanePoint focus : focusPoints) {
-            dist += Math.sqrt(Math.pow(point.x - focus.x, 2)
-                    + Math.pow(point.y - focus.y, 2));
+        for (PlanePoint focus : focalPoints) {
+            dist += Math.sqrt(Math.pow(point.x - focus.x, 2) + Math.pow(point.y - focus.y, 2));
         }
         return dist;
     }
 
     public boolean isWithinBand(PlanePoint point) {
         double totDist = computeSumDistance(point);
-        return (totDist * bandsStyle.precision) % bandsStyle.step <= bandsStyle.thickness;
+        return (totDist * PRECISION) % steps.get(currentDrawingStyle) <= thicknesses.get(currentDrawingStyle);
     }
 
-    public boolean isPlot(PlaneScreenCoordinates.PlanePoint point) {
-        if (bandsStyle.step != 0)
+    public boolean isPlot(PlanePoint point) {
+        if (currentDrawingStyle != DrawingStyle.PRECISION)
             return isWithinBand(point);
-        if (rasterMaker == null)
-            throw new RuntimeException(this.getClass() + ": RasterMaster object not initialized");
-        for (double level = 0.125 ; level < numPts; level += 0.5/numPts) {
-            if (rasterMaker.crossesLevel((p) -> computeSumDistance(p), point, level)) {
+        for (double level = 0.125; level < numPts; level += 0.5 / numPts)
+            if (rasterMaker.crossesLevel(this::computeSumDistance, point, level))
                 return true;
-            }
-        }
         return false;
     }
 
-
     private void computeRegularPoints() {
-        focusPoints = new ArrayList<>();
+        focalPoints = new ArrayList<>();
 
         double x0 = 0.0;
         double y0 = (numPts > 1) ? RADIUS : 0;
         PlanePoint pt = new PlanePoint(x0 + xCenter, yCenter - y0);
-        focusPoints.add(pt);
+        focalPoints.add(pt);
 
         double angle = 2 * Math.PI / numPts;
         for (int n = 1; n < numPts; n++) {
             double x = Math.cos(n * angle) * x0 + Math.sin(n * angle) * y0;
             double y = -Math.sin(n * angle) * x0 + Math.cos(n * angle) * y0;
             pt = new PlanePoint(x + xCenter, yCenter - y);
-            focusPoints.add(pt);
+            focalPoints.add(pt);
         }
     }
 
     private void computeAlignedPoints() {
-        focusPoints = new ArrayList<>();
+        focalPoints = new ArrayList<>();
 
         if (numPts == 1) {
-            focusPoints.add(new PlanePoint(xCenter, yCenter));
+            focalPoints.add(new PlanePoint(xCenter, yCenter));
             return;
         }
 
@@ -104,15 +113,15 @@ class ThreePointsModel {
 
         for (int i = 0; i < numPts; i++) {
             double x = xCenter - RADIUS + i * step;
-            focusPoints.add(new PlanePoint(x, yCenter));
+            focalPoints.add(new PlanePoint(x, yCenter));
         }
     }
 
     private void computeRandomPoints() {
-        focusPoints = new ArrayList<>();
+        focalPoints = new ArrayList<>();
 
         if (numPts == 1) {
-            focusPoints.add(new PlanePoint(xCenter, yCenter));
+            focalPoints.add(new PlanePoint(xCenter, yCenter));
             return;
         }
         int i = 0;
@@ -120,7 +129,7 @@ class ThreePointsModel {
             double x = Math.random() * 2 * RADIUS - RADIUS;
             double y = Math.random() * 2 * RADIUS - RADIUS;
             if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < RADIUS) {
-                focusPoints.add(new PlanePoint(x, y));
+                focalPoints.add(new PlanePoint(x, y));
                 i++;
             }
         } while (i < numPts);
@@ -130,38 +139,13 @@ class ThreePointsModel {
         return selector.patterns;
     }
 
-    static class BandsStyle {
-        private final String[] drawingStyles = {"Thick", "Medium", "Fine", "Precision"};
-        private final int precision = 1000;
-        private int step;
-        private int thickness;
+    enum DrawingStyle {
+        THICK("Thick"), MEDIUM("Medium"), FINE("Fine"), PRECISION("Precision");
 
-        public BandsStyle() {
-            setStyle("Thick");
-        }
+        final String name;
 
-        public void setStyle(String style) {
-            switch (style) {
-                case "Thick":
-                    step = 300;
-                    thickness = 100;
-                    break;
-                case "Medium":
-                    step = 42;
-                    thickness = 10;
-                    break;
-                case "Fine":
-                    step = 60;
-                    thickness = 5;
-                    break;
-                case "Precision":
-                    step = 0;
-                    thickness = 0;
-                    break;
-                default:
-                    System.err.println("Undefined drawing style: " + style);
-            }
-
+        DrawingStyle(String arg) {
+            name = arg;
         }
     }
 
@@ -186,10 +170,8 @@ class ThreePointsModel {
                     computeAlignedPoints();
                     break;
                 default:
-                    System.err.println("undefined pattern for focus points: " + pattern);
+                    System.err.println("undefined pattern for focal points: " + pattern);
             }
         }
-
     }
-
 }
