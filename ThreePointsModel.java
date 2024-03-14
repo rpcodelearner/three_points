@@ -139,7 +139,7 @@ class ThreePointsModel {
         return selector.patterns;
     }
 
-    enum DrawingStyle {
+    private enum DrawingStyle {
         THICK("Thick"), MEDIUM("Medium"), FINE("Fine"), PRECISION("Precision");
 
         final String name;
