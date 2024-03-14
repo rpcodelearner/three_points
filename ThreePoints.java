@@ -32,7 +32,8 @@ public class ThreePoints {
         frame.setLocation(800, 150);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setUndecorated(false);
-        frame.setTitle("Bands of constant sum of distances from the red points");
+        frame.setResizable(false);
+        frame.setTitle("Constant sum of distances from the red points");
         return frame;
     }
 
