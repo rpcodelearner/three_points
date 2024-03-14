@@ -10,7 +10,7 @@ class ThreePointsMenuBar extends JMenuBar {
     private JComboBox<String> patternCtrl;
     private JComboBox<String> drawingCtrl;
 
-    public ThreePointsMenuBar(ThreePointsModel model, JPanel view) {
+    ThreePointsMenuBar(ThreePointsModel model, JPanel view) {
         this.model = model;
         this.view = view;
 
@@ -41,7 +41,7 @@ class ThreePointsMenuBar extends JMenuBar {
 
     public void selectPattern(ActionEvent choice) {
         tryGettingAndForwardingNumPoints();
-        model.selector.selectPattern((String) patternCtrl.getSelectedItem());
+        model.setFociPattern((String) patternCtrl.getSelectedItem());
         view.repaint();
     }
 

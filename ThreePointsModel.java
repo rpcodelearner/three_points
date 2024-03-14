@@ -9,13 +9,12 @@ import java.util.EnumMap;
 import java.util.List;
 
 class ThreePointsModel {
-
     private static final double RADIUS = 2.0 / 3; // tuned for viewing
     private static final int PRECISION = 1000;
-    static List<PlanePoint> focalPoints = null;
-    final PatternSelector selector = new PatternSelector();
-    final EnumMap<DrawingStyle, Integer> steps;
-    final EnumMap<DrawingStyle, Integer> thicknesses;
+    private static List<PlanePoint> focalPoints = null;
+    private final EnumMap<DrawingStyle, Integer> steps;
+    private final EnumMap<DrawingStyle, Integer> thicknesses;
+    private final PatternSelector selector = new PatternSelector();
     private final double xCenter = 0.0;
     private final double yCenter = 0.0;
     private final RasterMaster rasterMaker = new RasterMaster(2.0 / 512);
@@ -70,17 +69,15 @@ class ThreePointsModel {
         return dist;
     }
 
-    public boolean isWithinBand(PlanePoint point) {
+    private boolean isWithinBand(PlanePoint point) {
         double totDist = computeSumDistance(point);
         return (totDist * PRECISION) % steps.get(currentDrawingStyle) <= thicknesses.get(currentDrawingStyle);
     }
 
     public boolean isPlot(PlanePoint point) {
-        if (currentDrawingStyle != DrawingStyle.PRECISION)
-            return isWithinBand(point);
+        if (currentDrawingStyle != DrawingStyle.PRECISION) return isWithinBand(point);
         for (double level = 0.125; level < numPts; level += 0.5 / numPts)
-            if (rasterMaker.crossesLevel(this::computeSumDistance, point, level))
-                return true;
+            if (rasterMaker.crossesLevel(this::computeSumDistance, point, level)) return true;
         return false;
     }
 
@@ -139,6 +136,10 @@ class ThreePointsModel {
         return selector.patterns;
     }
 
+    public void setFociPattern(String choice) {
+        selector.selectPattern(choice);
+    }
+
     private enum DrawingStyle {
         THICK("Thick"), MEDIUM("Medium"), FINE("Fine"), PRECISION("Precision");
 
@@ -149,16 +150,16 @@ class ThreePointsModel {
         }
     }
 
-    class PatternSelector {
+    private class PatternSelector {
         private final String[] patterns = new String[]{"Regular", "Random", "Aligned"};
         private String pattern = "Regular";
 
-        public void selectPattern(String choice) {
+        private void selectPattern(String choice) {
             pattern = choice;
             computePoints();
         }
 
-        void computePoints() {
+        private void computePoints() {
             switch (pattern) {
                 case "Regular":
                     computeRegularPoints();
