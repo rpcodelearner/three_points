@@ -1,8 +1,11 @@
-TODO list
-    - replace PlaneScreenCoordinates with (two) Ranger, at least in ThreePoints
-    - reconsider where createAndSetupWindow() and createAndShowGUI() should belong
-    - manage window resizing
-    NICE TO HAVE
-    - add key controls: ESC -> Exit, +/- -> add/remove a focus and redraw, F5 -> force redraw (makes sense for RND positions)
+
+TODO: replace PlaneScreenCoordinates with (two) Ranger, at least in ThreePoints
+TODO: reconsider where createAndSetupWindow() and createAndShowGUI() should belong
+TODO: manage window resizing
+TODO: add Help, incl. About
+TODO: add key control: ESC -> Exit
+TODO: add key control: +/- -> add/remove a focus and redraw
+TODO: add key control: F5 -> with Random foci, select a new set and redraw
+TODO: (suggested by github.com/R1ck77) allow user to move foci around the screen
 
 FIXME: when drawing around random foci, changing drawing method should maintain the foci unchanged
