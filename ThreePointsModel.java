@@ -11,31 +11,39 @@ import java.util.List;
 class ThreePointsModel {
     private static final double RADIUS = 2.0 / 3; // tuned for viewing
     private static final int PRECISION = 1000;
-    private static List<PlanePoint> focalPoints = null;
-    private final EnumMap<DrawingStyle, Integer> steps;
-    private final EnumMap<DrawingStyle, Integer> thicknesses;
-    private final PatternSelector selector = new PatternSelector();
     private final double xCenter = 0.0;
     private final double yCenter = 0.0;
     private final RasterMaster rasterMaker = new RasterMaster(2.0 / 512);
+    private final EnumMap<DrawingStyle, Integer> steps;
+    private final EnumMap<DrawingStyle, Integer> thicknesses;
     private DrawingStyle currentDrawingStyle = DrawingStyle.THICK;
+    private FociPattern currentFociPattern = FociPattern.CIRCULAR;
+    private static List<PlanePoint> focalPoints = null;
     private int numPts = 3; // this default gives the app its name
 
     ThreePointsModel() {
         steps = new EnumMap<>(DrawingStyle.class);
-        steps.put(DrawingStyle.THICK, 300);
-        steps.put(DrawingStyle.MEDIUM, 42);
-        steps.put(DrawingStyle.FINE, 60);
-        steps.put(DrawingStyle.PRECISION, null);
+        initializeSteps();
         thicknesses = new EnumMap<>(DrawingStyle.class);
+        initializeThicknesses();
+        computePointsOnCircle(); // initializes focalPoints
+    }
+
+    private void initializeThicknesses() {
         thicknesses.put(DrawingStyle.THICK, 100);
         thicknesses.put(DrawingStyle.MEDIUM, 10);
         thicknesses.put(DrawingStyle.FINE, 5);
         thicknesses.put(DrawingStyle.PRECISION, null);
     }
 
+    private void initializeSteps() {
+        steps.put(DrawingStyle.THICK, 300);
+        steps.put(DrawingStyle.MEDIUM, 42);
+        steps.put(DrawingStyle.FINE, 60);
+        steps.put(DrawingStyle.PRECISION, null);
+    }
+
     public List<PlanePoint> getFoci() {
-        if (focalPoints == null) selector.computePoints();
         return focalPoints;
     }
 
@@ -46,7 +54,7 @@ class ThreePointsModel {
     public void setNumPts(int num) {
         if (num < 1) return;
         this.numPts = num;
-        selector.computePoints();
+        computePoints();
     }
 
     public String[] getDrawingStyles() {
@@ -61,7 +69,6 @@ class ThreePointsModel {
 
 
     private double computeSumDistance(PlanePoint point) {
-        if (focalPoints == null) selector.computePoints();
         double dist = 0.0;
         for (PlanePoint focus : focalPoints) {
             dist += Math.sqrt(Math.pow(point.x - focus.x, 2) + Math.pow(point.y - focus.y, 2));
@@ -81,7 +88,7 @@ class ThreePointsModel {
         return false;
     }
 
-    private void computeRegularPoints() {
+    private void computePointsOnCircle() {
         focalPoints = new ArrayList<>();
 
         double x0 = 0.0;
@@ -133,11 +140,16 @@ class ThreePointsModel {
     }
 
     public String[] getFociPatterns() {
-        return selector.patterns;
+        List<String> list = new ArrayList<>();
+        for (FociPattern p : FociPattern.values()) list.add(p.name);
+        return list.toArray(new String[0]);
+        //return selector.patterns;
     }
 
     public void setFociPattern(String choice) {
-        selector.selectPattern(choice);
+        for (FociPattern p : FociPattern.values())
+            if (p.name.equals(choice)) currentFociPattern = p;
+        computePoints();
     }
 
     private enum DrawingStyle {
@@ -150,29 +162,29 @@ class ThreePointsModel {
         }
     }
 
-    private class PatternSelector {
-        private final String[] patterns = new String[]{"Regular", "Random", "Aligned"};
-        private String pattern = "Regular";
+    private enum FociPattern {
+        CIRCULAR("Circular"), RANDOM("Random"), ALIGNED("Aligned");
 
-        private void selectPattern(String choice) {
-            pattern = choice;
-            computePoints();
+        final String name;
+
+        FociPattern(String arg) {
+            name = arg;
         }
+    }
 
-        private void computePoints() {
-            switch (pattern) {
-                case "Regular":
-                    computeRegularPoints();
-                    break;
-                case "Random":
-                    computeRandomPoints();
-                    break;
-                case "Aligned":
-                    computeAlignedPoints();
-                    break;
-                default:
-                    System.err.println("undefined pattern for focal points: " + pattern);
-            }
+    private void computePoints() {
+        switch (currentFociPattern.name) {
+            case "Circular":
+                computePointsOnCircle();
+                break;
+            case "Random":
+                computeRandomPoints();
+                break;
+            case "Aligned":
+                computeAlignedPoints();
+                break;
+            default:
+                System.err.println("undefined pattern for focal points" + currentFociPattern);
         }
     }
 }
