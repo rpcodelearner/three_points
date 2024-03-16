@@ -69,7 +69,6 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void selectDrawingStyle(ActionEvent actionEvent) {
-        tryGettingAndForwardingNumPoints();
         model.setDrawingStyle((String) drawingCtrl.getSelectedItem());
         view.repaint();
     }
