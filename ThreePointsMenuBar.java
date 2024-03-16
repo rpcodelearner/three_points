@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 class ThreePointsMenuBar extends JMenuBar {
     private final ThreePointsModel model;
     private final JPanel view;
-    private static final String NUMPOINTS_TOOLTIP_TEXT = "Number of focal points, put 2 for the classic ellipse";
+    private static final String NUMPOINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually: computation is longer higher values </html>";
     private static final String PATTERN_CTRL_TOOLTIP_TEXT = "Focal points (the red points) will be put according to this pattern";
     private static final String DRAWING_CTRL_TOOLTIP_TEXT = "<html>" +
             "How to draw. Scan the window pixel by pixel." +
