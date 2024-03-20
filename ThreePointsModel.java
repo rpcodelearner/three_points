@@ -1,9 +1,6 @@
 package com.github.rpcodelearner.three_points;
 
 
-import com.github.rpcodelearner.three_points.PlaneScreenCoordinates.PlanePoint;
-import com.github.rpcodelearner.three_points.plot.RasterMaster;
-
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -65,7 +62,6 @@ class ThreePointsModel {
     public void setDrawingStyle(String style) {
         for (DrawingStyle ds : DrawingStyle.values()) if (ds.name.equals(style)) currentDrawingStyle = ds;
     }
-
 
     private double computeSumDistance(PlanePoint point) {
         double dist = 0.0;
