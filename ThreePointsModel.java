@@ -52,7 +52,6 @@ class ThreePointsModel {
     }
 
     public void setNumPts(int num) {
-        if (num < 1) return;
         this.numPts = num;
         computePoints();
     }
