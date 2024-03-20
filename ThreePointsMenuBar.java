@@ -8,12 +8,12 @@ import java.awt.event.FocusEvent;
 class ThreePointsMenuBar extends JMenuBar {
     private final ThreePointsModel model;
     private final JPanel view;
-    private static final String NUM_POINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually: computation is longer higher values </html>";
-    private static final String PATTERN_CTRL_TOOLTIP_TEXT = "Focal points (the red points) will be put according to this pattern";
+    private static final String NUM_POINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually, as computation takes longer for higher values </html>";
+    private static final String PATTERN_CTRL_TOOLTIP_TEXT = "Focal points (the red points) will be located according to this pattern";
     private static final String DRAWING_CTRL_TOOLTIP_TEXT = "<html>" +
-            "How to draw. Scan the window pixel by pixel." +
-            "<br>Precision checks if the sum of distances crosses any of a few given level within that pixel." +
-            "<br>The other three methods roughly check if the sum of distances is withing given range(s)</html>";
+            "Drawing style." +
+            "<br><b>Thick</b>, <b>Medium</b> and <b>Fine</b> each draw a set of bands of roughly constant value." +
+            "<br><b>Precision</b> draws a few lines of constant value.</html>";
     private JTextField numPointsInputField;
     private JComboBox<String> patternCtrl;
     private JComboBox<String> drawingCtrl;
@@ -81,7 +81,6 @@ class ThreePointsMenuBar extends JMenuBar {
         model.setDrawingStyle((String) drawingCtrl.getSelectedItem());
         view.repaint();
     }
-
 
     private void changePointsNumber(ActionEvent ignoredTextInput) {
         tryGettingAndForwardingNumPoints();
