@@ -1,3 +1,7 @@
+The list in this file does not include daily tasks, but rather changes,
+also possibly optional changes, that may take a bit of work and could
+modify how the app works for the user.
+It can also include bugs that was not practical to fix as soon as they were found.
 
 TODO: allow and manage window resizing
 TODO: add Help, incl. About
