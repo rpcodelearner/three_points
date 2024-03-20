@@ -2,11 +2,13 @@ package com.github.rpcodelearner.three_points;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 class ThreePointsMenuBar extends JMenuBar {
     private final ThreePointsModel model;
     private final JPanel view;
-    private static final String NUMPOINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually: computation is longer higher values </html>";
+    private static final String NUM_POINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually: computation is longer higher values </html>";
     private static final String PATTERN_CTRL_TOOLTIP_TEXT = "Focal points (the red points) will be put according to this pattern";
     private static final String DRAWING_CTRL_TOOLTIP_TEXT = "<html>" +
             "How to draw. Scan the window pixel by pixel." +
@@ -21,7 +23,7 @@ class ThreePointsMenuBar extends JMenuBar {
         this.view = view;
 
         final JLabel numPointsLabel = new JLabel(" Foci number: ");
-        numPointsLabel.setToolTipText(NUMPOINTS_TOOLTIP_TEXT);
+        numPointsLabel.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
         this.add(numPointsLabel);
         addNumPointTextField(model);
 
@@ -42,7 +44,14 @@ class ThreePointsMenuBar extends JMenuBar {
         numPointsInputField = new JTextField(Integer.toString(model.getNumPts()));
         numPointsInputField.setHorizontalAlignment(JTextField.RIGHT);
         numPointsInputField.addActionListener(this::changePointsNumber);
-        numPointsInputField.setToolTipText(NUMPOINTS_TOOLTIP_TEXT);
+        numPointsInputField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                tryGettingAndForwardingNumPoints();
+                view.repaint();
+            }
+        });
+        numPointsInputField.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
         this.add(numPointsInputField);
     }
 
