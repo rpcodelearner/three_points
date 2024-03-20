@@ -4,7 +4,7 @@ TODO: reconsider where createAndSetupWindow() and createAndShowGUI() should belo
 TODO: manage window resizing
 TODO: add Help, incl. About
 TODO: add key control: ESC -> Exit
-TODO: add key control: +/- -> add/remove a focus and redraw
+TODO: add key control: if keyboard focus in numPointsInputField, UP/DOWN -> add/remove a focal point and redraw
 TODO: add key control: F5 -> with Random foci, select a new set and redraw
 TODO: (suggested by github.com/R1ck77) allow user to move foci around the screen
 
