@@ -7,7 +7,6 @@ import java.util.List;
 
 class ThreePointsModel {
     private static final double RADIUS = 2.0 / 3; // tuned for viewing
-    private static final int PRECISION = 1000;
     private final double xCenter = 0.0;
     private final double yCenter = 0.0;
     private final RasterMaster rasterMaker = new RasterMaster(2.0 / 512);
@@ -26,18 +25,18 @@ class ThreePointsModel {
         computePointsOnCircle(); // initializes focalPoints
     }
 
-    private void initializeThicknesses() {
-        thicknesses.put(DrawingStyle.THICK, 100);
-        thicknesses.put(DrawingStyle.MEDIUM, 10);
-        thicknesses.put(DrawingStyle.FINE, 5);
-        thicknesses.put(DrawingStyle.PRECISION, null);
-    }
-
     private void initializeSteps() {
         steps.put(DrawingStyle.THICK, 300);
         steps.put(DrawingStyle.MEDIUM, 42);
         steps.put(DrawingStyle.FINE, 60);
         steps.put(DrawingStyle.PRECISION, null);
+    }
+
+    private void initializeThicknesses() {
+        thicknesses.put(DrawingStyle.THICK, 100);
+        thicknesses.put(DrawingStyle.MEDIUM, 10);
+        thicknesses.put(DrawingStyle.FINE, 5);
+        thicknesses.put(DrawingStyle.PRECISION, null);
     }
 
     public List<PlanePoint> getFoci() {
@@ -53,6 +52,59 @@ class ThreePointsModel {
         computePoints();
     }
 
+    private void computePoints() {
+        if (numPts == 1) {
+            focalPoints = List.of(new PlanePoint(xCenter, yCenter));
+            return;
+        }
+        switch (currentFociPattern.name) {
+            case "Circular":
+                computePointsOnCircle();
+                break;
+            case "Random":
+                computeRandomPoints();
+                break;
+            case "Aligned":
+                computeAlignedPoints();
+                break;
+            default:
+                System.err.println("undefined pattern for focal points" + currentFociPattern);
+        }
+    }
+
+    private void computePointsOnCircle() {
+        focalPoints = new ArrayList<>();
+        final double angle = 2 * Math.PI / numPts;
+        for (int n = 0; n < numPts; n++) {
+            double x = Math.cos(n * angle) * xCenter + Math.sin(n * angle) * RADIUS;
+            double y = -Math.sin(n * angle) * xCenter + Math.cos(n * angle) * RADIUS;
+            PlanePoint pt = new PlanePoint(x + xCenter, yCenter - y);
+            focalPoints.add(pt);
+        }
+    }
+
+    private void computeAlignedPoints() {
+        focalPoints = new ArrayList<>();
+        final double step = (2 * RADIUS) / (numPts - 1);
+        for (int i = 0; i < numPts; i++) {
+            double x = xCenter - RADIUS + i * step;
+            focalPoints.add(new PlanePoint(x, yCenter));
+        }
+    }
+
+    private void computeRandomPoints() {
+        focalPoints = new ArrayList<>();
+        int i = 0;
+        do {
+            double x = (Math.random() * 2 * RADIUS) - RADIUS;
+            double y = (Math.random() * 2 * RADIUS) - RADIUS;
+            if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < RADIUS) {
+                focalPoints.add(new PlanePoint(x, y));
+                i++;
+            }
+        } while (i < numPts);
+    }
+
     public String[] getDrawingStyles() {
         List<String> list = new ArrayList<>();
         for (DrawingStyle ds : DrawingStyle.values()) list.add(ds.name);
@@ -63,17 +115,10 @@ class ThreePointsModel {
         for (DrawingStyle ds : DrawingStyle.values()) if (ds.name.equals(style)) currentDrawingStyle = ds;
     }
 
-    private double computeSumDistance(PlanePoint point) {
-        double dist = 0.0;
-        for (PlanePoint focus : focalPoints) {
-            dist += Math.sqrt(Math.pow(point.x - focus.x, 2) + Math.pow(point.y - focus.y, 2));
-        }
-        return dist;
-    }
-
     private boolean isWithinBand(PlanePoint point) {
+        final int precision = 1000;
         double totDist = computeSumDistance(point);
-        return (totDist * PRECISION) % steps.get(currentDrawingStyle) <= thicknesses.get(currentDrawingStyle);
+        return (totDist * precision) % steps.get(currentDrawingStyle) <= thicknesses.get(currentDrawingStyle);
     }
 
     public boolean isPlot(PlanePoint point) {
@@ -83,55 +128,12 @@ class ThreePointsModel {
         return false;
     }
 
-    private void computePointsOnCircle() {
-        focalPoints = new ArrayList<>();
-
-        double x0 = 0.0;
-        double y0 = (numPts > 1) ? RADIUS : 0;
-        PlanePoint pt = new PlanePoint(x0 + xCenter, yCenter - y0);
-        focalPoints.add(pt);
-
-        double angle = 2 * Math.PI / numPts;
-        for (int n = 1; n < numPts; n++) {
-            double x = Math.cos(n * angle) * x0 + Math.sin(n * angle) * y0;
-            double y = -Math.sin(n * angle) * x0 + Math.cos(n * angle) * y0;
-            pt = new PlanePoint(x + xCenter, yCenter - y);
-            focalPoints.add(pt);
+    private double computeSumDistance(PlanePoint point) {
+        double dist = 0.0;
+        for (PlanePoint focus : focalPoints) {
+            dist += Math.sqrt(Math.pow(point.x - focus.x, 2) + Math.pow(point.y - focus.y, 2));
         }
-    }
-
-    private void computeAlignedPoints() {
-        focalPoints = new ArrayList<>();
-
-        if (numPts == 1) {
-            focalPoints.add(new PlanePoint(xCenter, yCenter));
-            return;
-        }
-
-        double step = (2 * RADIUS) / (numPts - 1);
-
-        for (int i = 0; i < numPts; i++) {
-            double x = xCenter - RADIUS + i * step;
-            focalPoints.add(new PlanePoint(x, yCenter));
-        }
-    }
-
-    private void computeRandomPoints() {
-        focalPoints = new ArrayList<>();
-
-        if (numPts == 1) {
-            focalPoints.add(new PlanePoint(xCenter, yCenter));
-            return;
-        }
-        int i = 0;
-        do {
-            double x = Math.random() * 2 * RADIUS - RADIUS;
-            double y = Math.random() * 2 * RADIUS - RADIUS;
-            if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < RADIUS) {
-                focalPoints.add(new PlanePoint(x, y));
-                i++;
-            }
-        } while (i < numPts);
+        return dist;
     }
 
     public String[] getFociPatterns() {
@@ -151,35 +153,19 @@ class ThreePointsModel {
         THICK("Thick"), MEDIUM("Medium"), FINE("Fine"), PRECISION("Precision");
 
         final String name;
-
         DrawingStyle(String arg) {
             name = arg;
         }
+
     }
 
     private enum FociPattern {
         CIRCULAR("Circular"), RANDOM("Random"), ALIGNED("Aligned");
 
         final String name;
-
         FociPattern(String arg) {
             name = arg;
         }
-    }
 
-    private void computePoints() {
-        switch (currentFociPattern.name) {
-            case "Circular":
-                computePointsOnCircle();
-                break;
-            case "Random":
-                computeRandomPoints();
-                break;
-            case "Aligned":
-                computeAlignedPoints();
-                break;
-            default:
-                System.err.println("undefined pattern for focal points" + currentFociPattern);
-        }
     }
 }
