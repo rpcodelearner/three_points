@@ -1,14 +1,13 @@
 package com.github.rpcodelearner.three_points;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 
 class ThreePointsMenuBar extends JMenuBar {
     private final ThreePointsModel model;
     private final JPanel view;
-    private static final String NUM_POINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually, as computation takes longer for higher values </html>";
+    private static final String NUM_POINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually, as computation takes longer for higher values." +
+            "<br>You can use Up/Down arrows (but you also have to press Enter or move the focus away).</html>";
     private static final String PATTERN_CTRL_TOOLTIP_TEXT = "Focal points (the red points) will be located according to this pattern";
     private static final String DRAWING_CTRL_TOOLTIP_TEXT = "<html>" +
             "Drawing style." +
@@ -49,6 +48,18 @@ class ThreePointsMenuBar extends JMenuBar {
             public void focusLost(FocusEvent e) {
                 tryGettingAndForwardingNumPoints();
                 view.repaint();
+            }
+        });
+        numPointsInputField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int currentNumber = Integer.parseInt(numPointsInputField.getText());
+                if (KeyEvent.getKeyText(e.getKeyCode()).equals("Up")) {
+                    numPointsInputField.setText(String.valueOf(++currentNumber));
+                }
+                if (KeyEvent.getKeyText(e.getKeyCode()).equals("Down")) {
+                    numPointsInputField.setText(String.valueOf(--currentNumber));
+                }
             }
         });
         numPointsInputField.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
