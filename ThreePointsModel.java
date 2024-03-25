@@ -1,9 +1,7 @@
 package com.github.rpcodelearner.three_points;
 
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 
 class ThreePointsModel {
     private static final double RADIUS = 2.0 / 3; // tuned for viewing
@@ -54,7 +52,7 @@ class ThreePointsModel {
 
     private void computePoints() {
         if (numPts == 1) {
-            focalPoints = List.of(new PlanePoint(xCenter, yCenter));
+            focalPoints = Collections.singletonList(new PlanePoint(xCenter, yCenter));
             return;
         }
         switch (currentFociPattern.name) {
