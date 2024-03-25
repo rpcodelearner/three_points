@@ -65,7 +65,6 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     public void selectPattern(ActionEvent ignoredChoice) {
-        tryGettingAndForwardingNumPoints();
         model.setFociPattern((String) patternCtrl.getSelectedItem());
         view.repaint();
     }
@@ -88,15 +87,14 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void tryGettingAndForwardingNumPoints() {
-        final int currentNum = model.getNumPts();
-        int num = currentNum;
+        int numPoints = model.getNumPts();
         try {
-            final int readNum = Integer.parseInt(numPointsInputField.getText());
-            if (readNum > 0) num = readNum;
+            final int readNumber = Integer.parseInt(numPointsInputField.getText());
+            if (readNumber > 0) numPoints = readNumber;
         } catch (NumberFormatException ignored) {
         }
-        if (num != currentNum) model.setNumPts(num);
-        numPointsInputField.setText(Integer.toString(num));
+        if (numPoints != model.getNumPts()) model.setNumPts(numPoints);
+        numPointsInputField.setText(Integer.toString(numPoints));
     }
 
 }
