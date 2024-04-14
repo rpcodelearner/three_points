@@ -1,4 +1,4 @@
-package com.github.rpcodelearner.three_points;
+package com.github.rpcodelearner.three_points.src.main.java;
 
 
 import java.util.*;
