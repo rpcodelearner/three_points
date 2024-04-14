@@ -24,7 +24,7 @@ class ThreePointsMenuBar extends JMenuBar {
         final JLabel numPointsLabel = new JLabel(" Foci number: ");
         numPointsLabel.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
         this.add(numPointsLabel);
-        addNumPointTextField(model);
+        addNumPointTextField();
 
         final JLabel patternCtrlLabel = new JLabel(" Foci pattern: ");
         patternCtrlLabel.setToolTipText(PATTERN_CTRL_TOOLTIP_TEXT);
@@ -39,7 +39,7 @@ class ThreePointsMenuBar extends JMenuBar {
         ToolTipManager.sharedInstance().setDismissDelay(15000);
     }
 
-    private void addNumPointTextField(ThreePointsModel model) {
+    private void addNumPointTextField() {
         numPointsInputField = new JTextField(Integer.toString(model.getNumPts()));
         numPointsInputField.setHorizontalAlignment(JTextField.RIGHT);
         numPointsInputField.addActionListener(this::changePointsNumber);
@@ -71,6 +71,15 @@ class ThreePointsMenuBar extends JMenuBar {
         patternCtrl = new JComboBox<>(patterns);
         patternCtrl.setSelectedItem(patterns[0]);
         patternCtrl.addActionListener(this::selectPattern);
+        patternCtrl.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_F5) {
+                    model.setFociPattern((String) patternCtrl.getSelectedItem());
+                    view.repaint();
+                }
+            }
+        });
         patternCtrl.setToolTipText(PATTERN_CTRL_TOOLTIP_TEXT);
         this.add(patternCtrl);
     }
