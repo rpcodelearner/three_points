@@ -46,14 +46,17 @@ class ThreePointsMenuBar extends JMenuBar {
         numPointsInputField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                tryGettingAndForwardingNumPoints();
+                int numPoints = tryGettingNumPoints();
+                if (numPoints != model.getNumPts()) model.setNumPts(numPoints);
+                numPointsInputField.setText(Integer.toString(numPoints));
+
                 view.repaint();
             }
         });
         numPointsInputField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                int currentNumber = Integer.parseInt(numPointsInputField.getText());
+                int currentNumber = tryGettingNumPoints();
                 if (KeyEvent.getKeyText(e.getKeyCode()).equals("Up")) {
                     numPointsInputField.setText(String.valueOf(++currentNumber));
                 }
@@ -102,19 +105,21 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void changePointsNumber(ActionEvent ignoredTextInput) {
-        tryGettingAndForwardingNumPoints();
+        int numPoints = tryGettingNumPoints();
+        if (numPoints != model.getNumPts()) model.setNumPts(numPoints);
+        numPointsInputField.setText(Integer.toString(numPoints));
+
         view.repaint();
     }
 
-    private void tryGettingAndForwardingNumPoints() {
+    private int tryGettingNumPoints() {
         int numPoints = model.getNumPts();
         try {
             final int readNumber = Integer.parseInt(numPointsInputField.getText());
             if (readNumber > 0) numPoints = readNumber;
         } catch (NumberFormatException ignored) {
         }
-        if (numPoints != model.getNumPts()) model.setNumPts(numPoints);
-        numPointsInputField.setText(Integer.toString(numPoints));
+        return numPoints;
     }
 
 }
