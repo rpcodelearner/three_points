@@ -33,7 +33,7 @@ public class ThreePoints {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setUndecorated(false);
         frame.setResizable(false);
-        frame.setTitle("Constant sum of distances from the red points");
+        frame.setTitle(ConfigAppStrings.getStringFor("AppWindowTitle"));
         return frame;
     }
 

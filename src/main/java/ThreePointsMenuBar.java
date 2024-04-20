@@ -1,18 +1,16 @@
 package com.github.rpcodelearner.three_points.src.main.java;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.event.*;
 
 class ThreePointsMenuBar extends JMenuBar {
+    private static final String NUM_POINTS_TOOLTIP_TEXT = ConfigAppStrings.getStringFor("numPoints_Tooltip");
+    private static final String PATTERN_CTRL_TOOLTIP_TEXT = ConfigAppStrings.getStringFor("patternCtrl_Tooltip");
+    private static final String DRAWING_CTRL_TOOLTIP_TEXT = ConfigAppStrings.getStringFor("drawingCtrl_Tooltip");
     private final ThreePointsModel model;
     private final JPanel view;
-    private static final String NUM_POINTS_TOOLTIP_TEXT = "<html>Number of focal points, put 2 for the classic ellipse<br>Increase gradually, as computation takes longer for higher values." +
-            "<br>You can use Up/Down arrows (but you also have to press Enter or move the focus away).</html>";
-    private static final String PATTERN_CTRL_TOOLTIP_TEXT = "Focal points (the red points) will be located according to this pattern";
-    private static final String DRAWING_CTRL_TOOLTIP_TEXT = "<html>" +
-            "Drawing style." +
-            "<br><b>Thick</b>, <b>Medium</b> and <b>Fine</b> each draw a set of bands of roughly constant value." +
-            "<br><b>Precision</b> draws a few lines of constant value.</html>";
+    private final EmptyBorder customEmptyBorder = new EmptyBorder(0, 5, 0, 5);
     private JTextField numPointsInputField;
     private JComboBox<String> patternCtrl;
     private JComboBox<String> drawingCtrl;
@@ -21,22 +19,23 @@ class ThreePointsMenuBar extends JMenuBar {
         this.model = model;
         this.view = view;
 
-        final JLabel numPointsLabel = new JLabel(" Foci number: ");
-        numPointsLabel.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
-        this.add(numPointsLabel);
+        addNumPointsLabel();
         addNumPointTextField();
 
-        final JLabel patternCtrlLabel = new JLabel(" Foci pattern: ");
-        patternCtrlLabel.setToolTipText(PATTERN_CTRL_TOOLTIP_TEXT);
-        this.add(patternCtrlLabel);
+        addPatternCtrlLabel();
         addPatternsCtrl();
 
-        final JLabel graphicsMenuLabel = new JLabel(" Drawing: ");
-        graphicsMenuLabel.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);
-        this.add(graphicsMenuLabel);
+        addGraphicsMenuLabel();
         addGraphicsMenu();
 
         ToolTipManager.sharedInstance().setDismissDelay(15000);
+    }
+
+    private void addNumPointsLabel() {
+        final JLabel numPointsLabel = new JLabel(ConfigAppStrings.getStringFor("numPointsLabel"));
+        numPointsLabel.setBorder(customEmptyBorder);
+        numPointsLabel.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
+        add(numPointsLabel);
     }
 
     private void addNumPointTextField() {
@@ -66,7 +65,14 @@ class ThreePointsMenuBar extends JMenuBar {
             }
         });
         numPointsInputField.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
-        this.add(numPointsInputField);
+        add(numPointsInputField);
+    }
+
+    private void addPatternCtrlLabel() {
+        final JLabel patternCtrlLabel = new JLabel(ConfigAppStrings.getStringFor("patternCtrlLabel"));
+        patternCtrlLabel.setBorder(customEmptyBorder);
+        patternCtrlLabel.setToolTipText(PATTERN_CTRL_TOOLTIP_TEXT);
+        add(patternCtrlLabel);
     }
 
     private void addPatternsCtrl() {
@@ -84,7 +90,7 @@ class ThreePointsMenuBar extends JMenuBar {
             }
         });
         patternCtrl.setToolTipText(PATTERN_CTRL_TOOLTIP_TEXT);
-        this.add(patternCtrl);
+        add(patternCtrl);
     }
 
     public void selectPattern(ActionEvent ignoredChoice) {
@@ -92,11 +98,18 @@ class ThreePointsMenuBar extends JMenuBar {
         view.repaint();
     }
 
+    private void addGraphicsMenuLabel() {
+        final JLabel graphicsMenuLabel = new JLabel(ConfigAppStrings.getStringFor("graphicsMenuLabel"));
+        graphicsMenuLabel.setBorder(customEmptyBorder);
+        graphicsMenuLabel.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);
+        add(graphicsMenuLabel);
+    }
+
     private void addGraphicsMenu() {
         drawingCtrl = new JComboBox<>(model.getDrawingStyles());
         drawingCtrl.addActionListener(this::selectDrawingStyle);
         drawingCtrl.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);
-        this.add(drawingCtrl);
+        add(drawingCtrl);
     }
 
     private void selectDrawingStyle(ActionEvent ignoredActionEvent) {
