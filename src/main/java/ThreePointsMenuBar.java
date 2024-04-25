@@ -14,6 +14,7 @@ class ThreePointsMenuBar extends JMenuBar {
     private JTextField numPointsInputField;
     private JComboBox<String> patternCtrl;
     private JComboBox<String> drawingCtrl;
+    private final MenuKeyListener menuKeyListener = new MenuKeyListener();
 
     ThreePointsMenuBar(ThreePointsModel model, JPanel view) {
         this.model = model;
@@ -52,18 +53,7 @@ class ThreePointsMenuBar extends JMenuBar {
                 view.repaint();
             }
         });
-        numPointsInputField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int currentNumber = tryGettingNumPoints();
-                if (KeyEvent.getKeyText(e.getKeyCode()).equals("Up")) {
-                    numPointsInputField.setText(String.valueOf(++currentNumber));
-                }
-                if (KeyEvent.getKeyText(e.getKeyCode()).equals("Down")) {
-                    numPointsInputField.setText(String.valueOf(--currentNumber));
-                }
-            }
-        });
+        numPointsInputField.addKeyListener(menuKeyListener);
         numPointsInputField.setToolTipText(NUM_POINTS_TOOLTIP_TEXT);
         add(numPointsInputField);
     }
@@ -80,15 +70,7 @@ class ThreePointsMenuBar extends JMenuBar {
         patternCtrl = new JComboBox<>(patterns);
         patternCtrl.setSelectedItem(patterns[0]);
         patternCtrl.addActionListener(this::selectPattern);
-        patternCtrl.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_F5) {
-                    model.setFociPattern((String) patternCtrl.getSelectedItem());
-                    view.repaint();
-                }
-            }
-        });
+        patternCtrl.addKeyListener(menuKeyListener);
         patternCtrl.setToolTipText(PATTERN_CTRL_TOOLTIP_TEXT);
         add(patternCtrl);
     }
@@ -108,6 +90,7 @@ class ThreePointsMenuBar extends JMenuBar {
     private void addGraphicsMenu() {
         drawingCtrl = new JComboBox<>(model.getDrawingStyles());
         drawingCtrl.addActionListener(this::selectDrawingStyle);
+        drawingCtrl.addKeyListener(menuKeyListener);
         drawingCtrl.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);
         add(drawingCtrl);
     }
@@ -133,6 +116,29 @@ class ThreePointsMenuBar extends JMenuBar {
         } catch (NumberFormatException ignored) {
         }
         return numPoints;
+    }
+
+    class MenuKeyListener extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_F5) {
+                userChoices.setNumPts(tryGettingNumPoints());
+                userChoices.setFociPattern((String) patternCtrl.getSelectedItem());
+                model.computePoints();
+                view.repaint();
+            }
+            if (e.getSource().equals(numPointsInputField)) {
+                int currentNumber = tryGettingNumPoints();
+                if (KeyEvent.getKeyText(e.getKeyCode()).equals("Up")) {
+                    numPointsInputField.setText(String.valueOf(++currentNumber));
+                }
+                if (KeyEvent.getKeyText(e.getKeyCode()).equals("Down")) {
+                    numPointsInputField.setText(String.valueOf(--currentNumber));
+                }
+            } else {
+                super.keyPressed(e);
+            }
+        }
     }
 
 }
