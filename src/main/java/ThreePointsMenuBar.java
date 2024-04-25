@@ -8,6 +8,7 @@ class ThreePointsMenuBar extends JMenuBar {
     private static final String NUM_POINTS_TOOLTIP_TEXT = ConfigAppStrings.getStringFor("numPoints_Tooltip");
     private static final String PATTERN_CTRL_TOOLTIP_TEXT = ConfigAppStrings.getStringFor("patternCtrl_Tooltip");
     private static final String DRAWING_CTRL_TOOLTIP_TEXT = ConfigAppStrings.getStringFor("drawingCtrl_Tooltip");
+    private final ThreePointsUserChoices userChoices;
     private final ThreePointsModel model;
     private final JPanel view;
     private final EmptyBorder customEmptyBorder = new EmptyBorder(0, 5, 0, 5);
@@ -16,8 +17,9 @@ class ThreePointsMenuBar extends JMenuBar {
     private JComboBox<String> drawingCtrl;
     private final MenuKeyListener menuKeyListener = new MenuKeyListener();
 
-    ThreePointsMenuBar(ThreePointsModel model, JPanel view) {
+    ThreePointsMenuBar(ThreePointsModel model, ThreePointsUserChoices userChoices, JPanel view) {
         this.model = model;
+        this.userChoices = userChoices;
         this.view = view;
 
         addNumPointsLabel();
@@ -40,14 +42,17 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void addNumPointTextField() {
-        numPointsInputField = new JTextField(Integer.toString(model.getNumPts()));
+        numPointsInputField = new JTextField(Integer.toString(userChoices.getNumPts()));
         numPointsInputField.setHorizontalAlignment(JTextField.RIGHT);
         numPointsInputField.addActionListener(this::changePointsNumber);
         numPointsInputField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 int numPoints = tryGettingNumPoints();
-                if (numPoints != model.getNumPts()) model.setNumPts(numPoints);
+                if (numPoints != userChoices.getNumPts()) {
+                    userChoices.setNumPts(numPoints);
+                    model.computePoints();
+                }
                 numPointsInputField.setText(Integer.toString(numPoints));
 
                 view.repaint();
@@ -66,7 +71,7 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void addPatternsCtrl() {
-        String[] patterns = model.getFociPatterns();
+        String[] patterns = userChoices.getFociPatterns();
         patternCtrl = new JComboBox<>(patterns);
         patternCtrl.setSelectedItem(patterns[0]);
         patternCtrl.addActionListener(this::selectPattern);
@@ -76,7 +81,8 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     public void selectPattern(ActionEvent ignoredChoice) {
-        model.setFociPattern((String) patternCtrl.getSelectedItem());
+        userChoices.setFociPattern((String) patternCtrl.getSelectedItem());
+        model.computePoints();
         view.repaint();
     }
 
@@ -88,7 +94,7 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void addGraphicsMenu() {
-        drawingCtrl = new JComboBox<>(model.getDrawingStyles());
+        drawingCtrl = new JComboBox<>(userChoices.getDrawingStyles());
         drawingCtrl.addActionListener(this::selectDrawingStyle);
         drawingCtrl.addKeyListener(menuKeyListener);
         drawingCtrl.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);
@@ -96,20 +102,23 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void selectDrawingStyle(ActionEvent ignoredActionEvent) {
-        model.setDrawingStyle((String) drawingCtrl.getSelectedItem());
+        userChoices.setDrawingStyle((String) drawingCtrl.getSelectedItem());
         view.repaint();
     }
 
     private void changePointsNumber(ActionEvent ignoredTextInput) {
         int numPoints = tryGettingNumPoints();
-        if (numPoints != model.getNumPts()) model.setNumPts(numPoints);
+        if (numPoints != userChoices.getNumPts()) {
+            userChoices.setNumPts(numPoints);
+            model.computePoints();
+        }
         numPointsInputField.setText(Integer.toString(numPoints));
 
         view.repaint();
     }
 
     private int tryGettingNumPoints() {
-        int numPoints = model.getNumPts();
+        int numPoints = userChoices.getNumPts();
         try {
             final int readNumber = Integer.parseInt(numPointsInputField.getText());
             if (readNumber > 0) numPoints = readNumber;

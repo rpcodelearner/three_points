@@ -8,19 +8,20 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class ThreePoints {
 
     public ThreePoints() {
-        final ThreePointsModel model = new ThreePointsModel();
-        invokeLater(() -> createAndShowGUI(model));
+        final ThreePointsUserChoices userChoices = new ThreePointsUserChoices();
+        final ThreePointsModel model = new ThreePointsModel(userChoices);
+        invokeLater(() -> createAndShowGUI(model, userChoices));
     }
 
     public static void main(String[] args) {
         new ThreePoints();
     }
 
-    private void createAndShowGUI(ThreePointsModel model) {
+    private void createAndShowGUI(ThreePointsModel model, ThreePointsUserChoices userChoices) {
         final JFrame window = createAndSetupWindow();
         final JPanel view = new ThreePointsPanel(model);
 
-        window.setJMenuBar(new ThreePointsMenuBar(model, view));
+        window.setJMenuBar(new ThreePointsMenuBar(model, userChoices, view));
         window.add(view);
 
         window.pack();
