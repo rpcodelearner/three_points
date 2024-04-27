@@ -13,7 +13,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "com.github.rpcodelearner.three_points.src.main.java.ThreePoints"
+    mainClassName = "com.github.rpcodelearner.three_points.ThreePoints"
 }
 
 test {

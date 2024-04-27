@@ -1,4 +1,4 @@
-package com.github.rpcodelearner.three_points.src.main.java;
+package com.github.rpcodelearner.three_points;
 
 /**
  * A Ranger object maps doubles to and from integers along a line.

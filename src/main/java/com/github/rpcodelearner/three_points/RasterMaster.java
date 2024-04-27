@@ -1,4 +1,4 @@
-package com.github.rpcodelearner.three_points.src.main.java;
+package com.github.rpcodelearner.three_points;
 
 /**
  * This class helps with "precision" drawing style.

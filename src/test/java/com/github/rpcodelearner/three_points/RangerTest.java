@@ -1,6 +1,5 @@
-package com.github.rpcodelearner.three_points.src.test.java;
+package com.github.rpcodelearner.three_points;
 
-import com.github.rpcodelearner.three_points.src.main.java.Ranger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
