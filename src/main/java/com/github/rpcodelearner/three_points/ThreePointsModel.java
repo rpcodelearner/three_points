@@ -9,6 +9,7 @@ class ThreePointsModel {
     private final double yCenter = 0.0;
     private final RasterMaster rasterMaker = new RasterMaster(2.0 / 512);
     private final ThreePointsUserChoices userChoices;
+    private final ThreePointsBands bands = new ThreePointsBands();
     private List<PlanePoint> focalPoints = null;
 
     ThreePointsModel(ThreePointsUserChoices userChoices) {
@@ -25,7 +26,7 @@ class ThreePointsModel {
             focalPoints = Collections.singletonList(new PlanePoint(xCenter, yCenter));
             return;
         }
-        switch (userChoices.currentFociPattern.name) {
+        switch (userChoices.getFociPattern()) {
             case "Circular":
                 computePointsOnCircle();
                 break;
@@ -76,7 +77,7 @@ class ThreePointsModel {
     private boolean isWithinBand(PlanePoint point) {
         final int precision = 1000;
         double totDist = computeSumDistance(point);
-        return (totDist * precision) % userChoices.steps.get(userChoices.currentDrawingStyle) <= userChoices.thicknesses.get(userChoices.currentDrawingStyle);
+        return (totDist * precision) % bands.steps.get(userChoices.currentDrawingStyle) <= bands.thicknesses.get(userChoices.currentDrawingStyle);
     }
 
     public boolean isPlot(PlanePoint point) {

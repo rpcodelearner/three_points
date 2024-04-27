@@ -71,7 +71,7 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void addPatternsCtrl() {
-        String[] patterns = userChoices.getFociPatterns();
+        String[] patterns = userChoices.getFociPatternsArray();
         patternCtrl = new JComboBox<>(patterns);
         patternCtrl.setSelectedItem(patterns[0]);
         patternCtrl.addActionListener(this::selectPattern);
@@ -94,7 +94,7 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void addGraphicsMenu() {
-        drawingCtrl = new JComboBox<>(userChoices.getDrawingStyles());
+        drawingCtrl = new JComboBox<>(userChoices.getDrawingStylesArray());
         drawingCtrl.addActionListener(this::selectDrawingStyle);
         drawingCtrl.addKeyListener(menuKeyListener);
         drawingCtrl.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);

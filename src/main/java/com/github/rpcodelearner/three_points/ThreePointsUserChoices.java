@@ -1,37 +1,12 @@
 package com.github.rpcodelearner.three_points;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 
 class ThreePointsUserChoices {
-    final EnumMap<DrawingStyle, Integer> steps;
-    final EnumMap<DrawingStyle, Integer> thicknesses;
     int numPts = 3; // this default gives the app its name
     FociPattern currentFociPattern = FociPattern.CIRCULAR;
     DrawingStyle currentDrawingStyle = DrawingStyle.THICK;
-
-    ThreePointsUserChoices() {
-        steps = new EnumMap<>(DrawingStyle.class);
-        initializeSteps();
-        thicknesses = new EnumMap<>(DrawingStyle.class);
-        initializeThicknesses();
-    }
-
-    private void initializeSteps() {
-        steps.put(DrawingStyle.THICK, 300);
-        steps.put(DrawingStyle.MEDIUM, 42);
-        steps.put(DrawingStyle.FINE, 60);
-        steps.put(DrawingStyle.PRECISION, null);
-    }
-
-    private void initializeThicknesses() {
-        thicknesses.put(DrawingStyle.THICK, 100);
-        thicknesses.put(DrawingStyle.MEDIUM, 10);
-        thicknesses.put(DrawingStyle.FINE, 5);
-        thicknesses.put(DrawingStyle.PRECISION, null);
-    }
-
 
     public int getNumPts() {
         return numPts;
@@ -41,10 +16,14 @@ class ThreePointsUserChoices {
         numPts = num;
     }
 
-    public String[] getFociPatterns() {
+    public String[] getFociPatternsArray() {
         List<String> list = new ArrayList<>();
         for (FociPattern p : FociPattern.values()) list.add(p.name);
         return list.toArray(new String[0]);
+    }
+
+    public String getFociPattern() {
+        return currentFociPattern.name;
     }
 
     public void setFociPattern(String choice) {
@@ -53,7 +32,7 @@ class ThreePointsUserChoices {
         }
     }
 
-    public String[] getDrawingStyles() {
+    public String[] getDrawingStylesArray() {
         List<String> list = new ArrayList<>();
         for (DrawingStyle ds : DrawingStyle.values()) list.add(ds.name);
         return list.toArray(new String[0]);
@@ -64,7 +43,7 @@ class ThreePointsUserChoices {
     }
 
 
-    enum FociPattern {
+    private enum FociPattern {
         CIRCULAR("Circular"), RANDOM("Random"), ALIGNED("Aligned");
 
         final String name;
