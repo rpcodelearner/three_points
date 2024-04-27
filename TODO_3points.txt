@@ -5,7 +5,6 @@ It can also include bugs that was not practical to fix as soon as they were foun
 
 TODO: allow and manage window resizing
 TODO: add Help, incl. About
-TODO: add key control: F5 -> with Random foci, select a new set and redraw
-    work in progress... Currently, it works only if the keyboard focus is on the patternCtrl JComboBox
+TODO - consider using resources to store [configurable] geometric constants
 TODO: (suggested by github.com/R1ck77) allow user to drag foci around the screen
 
