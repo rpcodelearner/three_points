@@ -38,11 +38,17 @@ class RasterMaster {
         double center = equation.compute(point) - level;
 
         // TODO invent a test [pattern] that shows the actual effect of this if-statement, if any
-        if (lu * rl < 0 && ru * ll < 0) return true;
+        if (lu * rl < 0 && ru * ll < 0) {
+            return true;
+        }
 
         if (lu * rl < 0 || ru * ll < 0) {
-            if (Math.abs(lu - rl) > Math.abs(2*center)) return true;
-            if (Math.abs(ru - ll) > Math.abs(2*center)) return true;
+            if (Math.abs(lu - rl) > Math.abs(2*center)) {
+                return true;
+            }
+            if (Math.abs(ru - ll) > Math.abs(2*center)) {
+                return true;
+            }
         }
         return false;
     }

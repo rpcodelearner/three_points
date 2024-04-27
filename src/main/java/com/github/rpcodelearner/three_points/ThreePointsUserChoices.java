@@ -18,7 +18,9 @@ class ThreePointsUserChoices {
 
     public String[] getFociPatternsArray() {
         List<String> list = new ArrayList<>();
-        for (FociPattern p : FociPattern.values()) list.add(p.name);
+        for (FociPattern p : FociPattern.values()) {
+            list.add(p.name);
+        }
         return list.toArray(new String[0]);
     }
 
@@ -28,18 +30,26 @@ class ThreePointsUserChoices {
 
     public void setFociPattern(String choice) {
         for (FociPattern p : FociPattern.values()) {
-            if (p.name.equals(choice)) currentFociPattern = p;
+            if (p.name.equals(choice)) {
+                currentFociPattern = p;
+            }
         }
     }
 
     public String[] getDrawingStylesArray() {
         List<String> list = new ArrayList<>();
-        for (DrawingStyle ds : DrawingStyle.values()) list.add(ds.name);
+        for (DrawingStyle ds : DrawingStyle.values()) {
+            list.add(ds.name);
+        }
         return list.toArray(new String[0]);
     }
 
     public void setDrawingStyle(String style) {
-        for (DrawingStyle ds : DrawingStyle.values()) if (ds.name.equals(style)) currentDrawingStyle = ds;
+        for (DrawingStyle ds : DrawingStyle.values()) {
+            if (ds.name.equals(style)) {
+                currentDrawingStyle = ds;
+            }
+        }
     }
 
 

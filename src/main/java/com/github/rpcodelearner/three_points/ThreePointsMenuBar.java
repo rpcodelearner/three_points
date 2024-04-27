@@ -121,7 +121,9 @@ class ThreePointsMenuBar extends JMenuBar {
         int numPoints = userChoices.getNumPts();
         try {
             final int readNumber = Integer.parseInt(numPointsInputField.getText());
-            if (readNumber > 0) numPoints = readNumber;
+            if (readNumber > 0) {
+                numPoints = readNumber;
+            }
         } catch (NumberFormatException ignored) {
         }
         return numPoints;
