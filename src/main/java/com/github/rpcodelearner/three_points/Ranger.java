@@ -7,7 +7,7 @@ package com.github.rpcodelearner.three_points;
  * value of the dependent variable to the pixel-measured offset on the vertical axis.
  * <br>See the constructor for further detail.
  */
-public class Ranger {
+class Ranger {
     private final int firstPixel;
     private final double minReal;
     private final double pixelSize;

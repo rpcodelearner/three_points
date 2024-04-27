@@ -2,7 +2,7 @@ package com.github.rpcodelearner.three_points;
 
 import java.util.Properties;
 
-public class ConfigAppStrings {
+class ConfigAppStrings {
     private static ConfigAppStrings INSTANCE;
     private final Properties appStrings;
 
