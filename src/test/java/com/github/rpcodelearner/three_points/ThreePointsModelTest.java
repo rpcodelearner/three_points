@@ -3,8 +3,10 @@ package com.github.rpcodelearner.three_points;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ThreePointsModelTest {
     private static final double EPS = 1e-10;
@@ -99,6 +101,33 @@ class ThreePointsModelTest {
                 assertEquals(isWithinBand, model.isPlot(pt));
             }
         }
+    }
+
+    @Test
+    void precisionPlotInvocation() {
+        // we test that a circle is drawn if there is one focus point
+        userChoices.setNumPts(1);
+        userChoices.setDrawingStyle("Precision");
+        model.computePoints();
+
+        double radius = findRadiusOfPaintedCircle(model);
+        final int TEST_POINTS_AT_CURR_RADIUS = 1000; // for precision plot we want to try lots of points
+        final double angleLimit = Math.PI / 2.0;
+        final double angleStep = angleLimit / TEST_POINTS_AT_CURR_RADIUS;
+        for (double angle = 0.0; angle < angleLimit; angle += angleStep) {
+            PlanePoint pt = new PlanePoint(radius * Math.cos(angle), radius * Math.sin(angle));
+            assertTrue(model.isPlot(pt));
+        }
+    }
+
+    private double findRadiusOfPaintedCircle(ThreePointsModel model) {
+        for (double r = RADIUS; r > 0.0; r -= 0.001) {
+            PlanePoint pt = new PlanePoint(0, r);
+            if (model.isPlot(pt)) {
+                return r;
+            }
+        }
+        return Double.NaN;
     }
 
 }

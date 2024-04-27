@@ -1,7 +1,9 @@
 package com.github.rpcodelearner.three_points;
 
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class ThreePointsModel {
     private static final double RADIUS = 2.0 / 3; // tuned for viewing
@@ -17,7 +19,7 @@ class ThreePointsModel {
         computePoints(); // must call to initialize focalPoints
     }
 
-    public List<PlanePoint> getFoci() {
+    List<PlanePoint> getFoci() {
         return focalPoints;
     }
 
@@ -37,7 +39,7 @@ class ThreePointsModel {
                 computeAlignedPoints();
                 break;
             default:
-                System.err.println("undefined pattern for focal points" + userChoices.currentFociPattern);
+                throw new RuntimeException("Unexpected pattern for focal points: " + userChoices.currentFociPattern);
         }
     }
 
@@ -74,18 +76,25 @@ class ThreePointsModel {
         } while (i < userChoices.numPts);
     }
 
+    boolean isPlot(PlanePoint point) {
+        if (userChoices.currentDrawingStyle != ThreePointsUserChoices.DrawingStyle.PRECISION) {
+            return isWithinBand(point);
+        }
+        // magic numbers chosen to obtain a reasonable drawing
+        for (double level = 0.125; level < userChoices.numPts; level += 0.5 / userChoices.numPts) {
+            if (rasterMaker.crossesLevel(this::computeSumDistance, point, level)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean isWithinBand(PlanePoint point) {
         final int precision = 1000;
         double totDist = computeSumDistance(point);
         return (totDist * precision) % bands.steps.get(userChoices.currentDrawingStyle) <= bands.thicknesses.get(userChoices.currentDrawingStyle);
     }
 
-    public boolean isPlot(PlanePoint point) {
-        if (userChoices.currentDrawingStyle != ThreePointsUserChoices.DrawingStyle.PRECISION) return isWithinBand(point);
-        for (double level = 0.125; level < userChoices.numPts; level += 0.5 / userChoices.numPts)
-            if (rasterMaker.crossesLevel(this::computeSumDistance, point, level)) return true;
-        return false;
-    }
 
     private double computeSumDistance(PlanePoint point) {
         double dist = 0.0;
