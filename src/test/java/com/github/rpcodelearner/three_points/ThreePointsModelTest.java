@@ -1,0 +1,104 @@
+package com.github.rpcodelearner.three_points;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+class ThreePointsModelTest {
+    private static final double EPS = 1e-10;
+    private static final double RADIUS = 2.0 / 3.0;
+    private ThreePointsUserChoices userChoices;
+    private ThreePointsModel model;
+
+    @BeforeEach
+    void setUp() {
+        userChoices = new ThreePointsUserChoices();
+        model = new ThreePointsModel(userChoices);
+    }
+
+    @Test
+    void getFociOnePoint() {
+        userChoices.setNumPts(1);
+        model.computePoints();
+        assertEquals(1, model.getFoci().size());
+        assertEquals(0.0, model.getFoci().get(0).x, EPS);
+        assertEquals(0.0, model.getFoci().get(0).y, EPS);
+    }
+
+    @Test
+    void defaultFoci() {
+        assertEquals(3, model.getFoci().size());
+
+        assertEquals(0.0, model.getFoci().get(0).x, EPS);
+        assertEquals(-RADIUS, model.getFoci().get(0).y, EPS);
+
+        // WARNING: don't get confused by the fact that x,y and sin,cos look "strangely swapped",
+        // it is just a coincidence of this test
+        assertEquals(Math.sin(Math.PI/3)*RADIUS, model.getFoci().get(1).x, EPS);
+        assertEquals(Math.cos(Math.PI/3)*RADIUS, model.getFoci().get(1).y, EPS);
+
+        // WARNING: don't get confused by the fact that x,y and sin,cos look "strangely swapped",
+        // it is just a coincidence of this test
+        assertEquals(-Math.sin(Math.PI/3)*RADIUS, model.getFoci().get(2).x, EPS);
+        assertEquals(Math.cos(Math.PI/3)*RADIUS, model.getFoci().get(2).y, EPS);
+    }
+
+    @Test
+    void alignedFoci() {
+        userChoices.setNumPts(5); // easy test, so we also try more points
+        userChoices.setFociPattern("Aligned");
+        model.computePoints();
+
+        assertEquals(5, model.getFoci().size());
+
+        assertEquals(-RADIUS * 1.0, model.getFoci().get(0).x, EPS);
+        assertEquals(-RADIUS * 0.5, model.getFoci().get(1).x, EPS);
+        assertEquals(RADIUS * 0.0, model.getFoci().get(2).x, EPS);
+        assertEquals(RADIUS * 0.5, model.getFoci().get(3).x, EPS);
+        assertEquals(RADIUS * 1.0, model.getFoci().get(4).x, EPS);
+
+        for (PlanePoint pt : model.getFoci()) {
+            assertEquals(0.0, pt.y, EPS);
+        }
+    }
+
+    @Test
+    void randomFoci() {
+        // random is unpredictable, so we "test" that none of
+        // the points coordinates matches "special" values
+        userChoices.setFociPattern("Random");
+        model.computePoints();
+        for (PlanePoint pt : model.getFoci()) {
+            assertNotEquals(0.0, pt.x, EPS);
+            assertNotEquals(0.0, pt.y, EPS);
+
+            assertNotEquals(RADIUS, pt.x, EPS);
+            assertNotEquals(RADIUS, pt.y, EPS);
+
+            assertNotEquals(-RADIUS, pt.x, EPS);
+            assertNotEquals(-RADIUS, pt.y, EPS);
+        }
+    }
+
+    @Test
+    void isWithinBand() {
+        // we test that bands looks circular for a single point
+        userChoices.setNumPts(1);
+        userChoices.setDrawingStyle("Medium");
+        model.computePoints();
+
+        for (double radius = 0.1 ; radius < RADIUS ; radius += 0.1) {
+            PlanePoint referencePoint = new PlanePoint(0.0, radius);
+            boolean isWithinBand = model.isPlot(referencePoint);
+            final int TEST_POINTS_AT_CURR_RADIUS = 10;
+
+            for (double angle = 0.0; angle < Math.PI; angle += Math.PI / TEST_POINTS_AT_CURR_RADIUS) {
+                PlanePoint pt = new PlanePoint(radius * Math.cos(angle), radius * Math.sin(angle));
+                assertEquals(isWithinBand, model.isPlot(pt));
+            }
+        }
+    }
+
+}
