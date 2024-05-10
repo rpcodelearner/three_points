@@ -16,6 +16,12 @@ application {
     mainClassName = "com.github.rpcodelearner.three_points.ThreePoints"
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
 test {
     useJUnitPlatform()
 }
