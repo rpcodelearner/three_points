@@ -93,6 +93,9 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void fociPatterSelection() {
+        // We suppress the unchecked-cast warning because we know what we are casting, and we expect
+        // the test to fail if the code under test changes
+        @SuppressWarnings({"unchecked"})
         JComboBox<String> fociPatternCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(3);
         fociPatternCombo.setSelectedIndex(1); // an ActionEvent object is automatically produced
         assertEquals("Random", fociPatternCombo.getSelectedItem());
@@ -101,6 +104,9 @@ class ThreePointsMenuBarWhiteBoxTest {
     @Test
     void fociPatterF5() {
         // this test added to cover a specific code branch
+        // We suppress the unchecked-cast warning because we know what we are casting, and we expect
+        // the test to fail if the code under test changes
+        @SuppressWarnings({"unchecked"})
         JComboBox<String> fociPatternCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(3);
         final String currentSelection = (String) fociPatternCombo.getSelectedItem();
         pressNonUnicodeKey(fociPatternCombo, KeyEvent.VK_F5);
@@ -109,6 +115,9 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void drawingStyleSelection() {
+        // We suppress the unchecked-cast warning because we know what we are casting, and we expect
+        // the test to fail if the code under test changes
+        @SuppressWarnings({"unchecked"})
         JComboBox<String> drawingStyleCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(5);
         drawingStyleCombo.setSelectedIndex(1); // an ActionEvent object is automatically produced
         assertEquals("Medium", drawingStyleCombo.getSelectedItem());
@@ -159,7 +168,7 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     private static class TestFrame extends JFrame {
 
-        TestFrame() throws HeadlessException {
+        TestFrame() {
             ThreePointsUserChoices userChoices = new ThreePointsUserChoices();
             ThreePointsModel model = new ThreePointsModel(userChoices);
             final JPanel view = new ThreePointsPanel(model);
