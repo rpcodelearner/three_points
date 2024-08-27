@@ -11,14 +11,12 @@ import java.awt.event.KeyEvent;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * The purpose of {@link ThreePointsMenuBarWhiteTest} is to white-tests {@link ThreePointsMenuBar}.
- * <br>"White-testing" means that we <i>know</i> about the internals of the software under test,
+ * The purpose of {@link ThreePointsMenuBarWhiteBoxTest} is to white-box-test {@link ThreePointsMenuBar}.
+ * <br>"White-box testing" means that we <i>know</i> about the internals of the software under test,
  * but we act strictly through the class interface, like a client would.
- * <br>The focus in white testing is on getting high coverage.
- * <br>The use of pauses/sleep in part of the code is to allow some time for the software under
- * test to process the [emulated] events it receives.
+ * <br>The focus in white-box testing is on getting high coverage.
  */
-class ThreePointsMenuBarWhiteTest {
+class ThreePointsMenuBarWhiteBoxTest {
     TestFrame testFrame;
 
     @BeforeEach
@@ -104,7 +102,9 @@ class ThreePointsMenuBarWhiteTest {
     void fociPatterF5() {
         // this test added to cover a specific code branch
         JComboBox<String> fociPatternCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(3);
+        final String currentSelection = (String) fociPatternCombo.getSelectedItem();
         pressNonUnicodeKey(fociPatternCombo, KeyEvent.VK_F5);
+        assertEquals(currentSelection, fociPatternCombo.getSelectedItem());
     }
 
     @Test
@@ -141,6 +141,13 @@ class ThreePointsMenuBarWhiteTest {
         pause(50);
     }
 
+
+    /**
+     * Small try-catch wrapper around Thread.sleep().
+     * <br>The use of pauses/sleeping in parts of the code allows some time for
+     * the software under test to process the [emulated] events it receives.
+     * @param time_ms Sleeping time in millisecond
+     */
     private void pause(int time_ms) {
         try {
             Thread.sleep(time_ms);
