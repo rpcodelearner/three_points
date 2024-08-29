@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * <br><br>
  * <b>WARNING</b>: the tests below make use of the Focus Subsystem and may not work if the mouse or the keyboard
  * bring the focus outside the windows that are instantiated. It is recommended <u>not to interact with the computer</u> while the
- * tests are running.
+ * tests are running (estimated duration: a few seconds).
  */
 class ThreePointsMenuBarWhiteBoxTest {
     private final static int NUM_POINTS_INDEX = 1;
@@ -36,8 +36,12 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @AfterEach
     void tearDown() {
-        testFrame.dispose();
-        pause(150);
+        try {
+            SwingUtilities.invokeAndWait(() -> testFrame.dispose());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        pause(250);
         assertFalse(testFrame.isActive());
         assertFalse(testFrame.isVisible());
     }
