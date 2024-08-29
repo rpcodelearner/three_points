@@ -28,12 +28,3 @@ Choices:
   * Medium - as per Thick, but many smaller bands
   * Fine - as per Medium, but the bands are thinner
   * Precision - check if the value crosses a given "level" within the pixel being considered. It considers a number of such "levels", also depending on the number of foci. This method takes longer.
-
-## History
-I began this small app years ago with two purposes in mind:
-* to learn Swing
-* to see how the 3rd curve in the series looks like: circle, ellipse, ??? 
-
-Then I experimented with adding more features.
-At that time, I was **really** a beginner in java.  
-Recently, I decided to take some long due exercise and I began refactoring the code... (Not really finished yet).
