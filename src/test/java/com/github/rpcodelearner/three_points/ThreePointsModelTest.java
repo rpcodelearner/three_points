@@ -3,8 +3,7 @@ package com.github.rpcodelearner.three_points;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,7 +67,7 @@ class ThreePointsModelTest {
 
     @Test
     void randomFoci() {
-        // random is unpredictable, so we "test" that none of
+        // as random is unpredictable, we "test" that none of
         // the points coordinates matches "special" values
         userChoices.setFociPattern("Random");
         model.computePoints();
@@ -81,6 +80,39 @@ class ThreePointsModelTest {
 
             assertNotEquals(-RADIUS, pt.x, EPS);
             assertNotEquals(-RADIUS, pt.y, EPS);
+        }
+    }
+
+    @Test
+    void repeatedRandomFoci() {
+        // as random is unpredictable, we "test" that successive
+        // calls to model.computePoints() give different sets of foci
+        userChoices.setFociPattern("Random");
+        model.computePoints();
+        List<PlanePoint> firstRunFoci = model.getFoci();
+        model.computePoints();
+        List<PlanePoint> secondRunFoci = model.getFoci();
+        preTestPlanePointComparison();
+        doAllComparisons(firstRunFoci, secondRunFoci);
+    }
+
+    private void preTestPlanePointComparison() {
+        final PlanePoint ppA = new PlanePoint(0.1, 2.3); // NB same values as ppB below
+        assertNotEquals( null, ppA);
+        assertNotEquals(ppA, new Object());
+        final PlanePoint ppB = new PlanePoint(0.1, 2.3); // NB same values as ppA above
+        assertEquals(ppA, ppB);
+        assertEquals(ppA.hashCode(), ppB.hashCode());
+        final PlanePoint ppC = new PlanePoint(4.5, 6.7);
+        assertNotEquals(ppA, ppC);
+        assertNotEquals(ppA.hashCode(), ppC.hashCode());
+    }
+
+    private static void doAllComparisons(List<PlanePoint> firstRunFoci, List<PlanePoint> secondRunFoci) {
+        for (PlanePoint firstRunFocus : firstRunFoci) {
+            for (PlanePoint secondRunFocus : secondRunFoci) {
+                assertNotEquals(firstRunFocus, secondRunFocus);
+            }
         }
     }
 
