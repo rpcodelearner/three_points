@@ -12,10 +12,10 @@ class ThreePointsMenuBar extends JMenuBar {
     private final ThreePointsModel model;
     private final JPanel view;
     private final EmptyBorder customEmptyBorder = new EmptyBorder(0, 5, 0, 5);
+    private final MenuKeyListener menuKeyListener = new MenuKeyListener();
     private JTextField numPointsInputField;
     private JComboBox<String> patternCtrl;
     private JComboBox<String> drawingCtrl;
-    private final MenuKeyListener menuKeyListener = new MenuKeyListener();
 
     ThreePointsMenuBar(ThreePointsModel model, ThreePointsUserChoices userChoices, JPanel view) {
         this.model = model;
@@ -48,12 +48,10 @@ class ThreePointsMenuBar extends JMenuBar {
         numPointsInputField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                int numPoints = tryGettingNumPoints();
-                if (numPoints != userChoices.getNumPts()) {
-                    userChoices.setNumPts(numPoints);
+                if (isNumPointsUpdated()) {
                     model.computePoints();
                 }
-                numPointsInputField.setText(Integer.toString(numPoints));
+                numPointsInputField.setText(Integer.toString(userChoices.getNumPts()));
 
                 view.repaint();
             }
@@ -107,48 +105,61 @@ class ThreePointsMenuBar extends JMenuBar {
     }
 
     private void changePointsNumber(ActionEvent ignoredTextInput) {
-        int numPoints = tryGettingNumPoints();
-        if (numPoints != userChoices.getNumPts()) {
-            userChoices.setNumPts(numPoints);
+        if (isNumPointsUpdated()) {
             model.computePoints();
         }
-        numPointsInputField.setText(Integer.toString(numPoints));
+        numPointsInputField.setText(Integer.toString(userChoices.getNumPts()));
 
         view.repaint();
     }
 
-    private int tryGettingNumPoints() {
-        int numPoints = userChoices.getNumPts();
+    private boolean isNumPointsUpdated() {
         try {
             final int readNumber = Integer.parseInt(numPointsInputField.getText());
             if (readNumber > 0) {
-                numPoints = readNumber;
+                userChoices.setNumPts(readNumber);
+                return true;
             }
         } catch (NumberFormatException ignored) {
+            numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
         }
-        return numPoints;
+        return false;
     }
 
+
     class MenuKeyListener extends KeyAdapter {
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getSource().equals(numPointsInputField)) {
+                if (KeyEvent.getKeyText(e.getKeyCode()).matches("[a-zA-Z]")) {
+                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
+                }
+            }
+            super.keyReleased(e);
+        }
+
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_F5) {
-                userChoices.setNumPts(tryGettingNumPoints());
                 userChoices.setFociPattern((String) patternCtrl.getSelectedItem());
                 model.computePoints();
                 view.repaint();
             }
             if (e.getSource().equals(numPointsInputField)) {
-                int currentNumber = tryGettingNumPoints();
+                if (KeyEvent.getKeyText(e.getKeyCode()).matches("[a-zA-Z]")) {
+                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
+                }
                 if (KeyEvent.getKeyText(e.getKeyCode()).equals("Up")) {
-                    numPointsInputField.setText(String.valueOf(++currentNumber));
+                    userChoices.setNumPts(userChoices.getNumPts() + 1);
+                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
                 }
                 if (KeyEvent.getKeyText(e.getKeyCode()).equals("Down")) {
-                    numPointsInputField.setText(String.valueOf(--currentNumber));
+                    userChoices.setNumPts(userChoices.getNumPts() - 1);
+                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
                 }
-            } else {
-                super.keyPressed(e);
             }
+            super.keyPressed(e);
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ThreePointsUserChoices {
-    int numPts = 3; // this default gives the app its name
+    private int numPts = 3; // this default gives the app its name
     FociPattern currentFociPattern = FociPattern.CIRCULAR;
     DrawingStyle currentDrawingStyle = DrawingStyle.THICK;
 

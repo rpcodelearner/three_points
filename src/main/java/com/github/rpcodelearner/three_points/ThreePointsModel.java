@@ -24,7 +24,7 @@ class ThreePointsModel {
     }
 
     void computePoints() {
-        if (userChoices.numPts == 1) {
+        if (userChoices.getNumPts() == 1) {
             focalPoints = Collections.singletonList(new PlanePoint(xCenter, yCenter));
             return;
         }
@@ -45,8 +45,8 @@ class ThreePointsModel {
 
     private void computePointsOnCircle() {
         focalPoints = new ArrayList<>();
-        final double angle = 2 * Math.PI / userChoices.numPts;
-        for (int n = 0; n < userChoices.numPts; n++) {
+        final double angle = 2 * Math.PI / userChoices.getNumPts();
+        for (int n = 0; n < userChoices.getNumPts(); n++) {
             double x = Math.cos(n * angle) * xCenter + Math.sin(n * angle) * RADIUS;
             double y = -Math.sin(n * angle) * xCenter + Math.cos(n * angle) * RADIUS;
             PlanePoint pt = new PlanePoint(x + xCenter, yCenter - y);
@@ -56,8 +56,8 @@ class ThreePointsModel {
 
     private void computeAlignedPoints() {
         focalPoints = new ArrayList<>();
-        final double step = (2 * RADIUS) / (userChoices.numPts - 1);
-        for (int i = 0; i < userChoices.numPts; i++) {
+        final double step = (2 * RADIUS) / (userChoices.getNumPts() - 1);
+        for (int i = 0; i < userChoices.getNumPts(); i++) {
             double x = xCenter - RADIUS + i * step;
             focalPoints.add(new PlanePoint(x, yCenter));
         }
@@ -73,7 +73,7 @@ class ThreePointsModel {
                 focalPoints.add(new PlanePoint(x, y));
                 i++;
             }
-        } while (i < userChoices.numPts);
+        } while (i < userChoices.getNumPts());
     }
 
     boolean isPlot(PlanePoint point) {
@@ -81,7 +81,7 @@ class ThreePointsModel {
             return isWithinBand(point);
         }
         // magic numbers chosen to obtain a reasonable drawing
-        for (double level = 0.125; level < userChoices.numPts; level += 0.5 / userChoices.numPts) {
+        for (double level = 0.125; level < userChoices.getNumPts(); level += 0.5 / userChoices.getNumPts()) {
             if (rasterMaker.crossesLevel(this::computeSumDistance, point, level)) {
                 return true;
             }
