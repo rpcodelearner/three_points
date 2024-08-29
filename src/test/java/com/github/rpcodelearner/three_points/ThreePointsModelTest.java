@@ -130,4 +130,15 @@ class ThreePointsModelTest {
         return Double.NaN;
     }
 
+    @Test
+    void exceptionTest() {
+        // to force an unexpected result we fake a "malfunctioning" ThreePointsUserChoices
+        assertThrows(RuntimeException.class, () -> new ThreePointsModel(new ThreePointsUserChoices() {
+            @Override
+            public String getFociPattern() {
+                return "WrongChoiceForTestingPurposes";
+            }
+        }));
+    }
+
 }
