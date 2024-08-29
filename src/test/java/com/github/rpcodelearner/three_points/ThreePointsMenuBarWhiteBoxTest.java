@@ -14,6 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * The purpose of {@link ThreePointsMenuBarWhiteBoxTest} is to do a high-coverage test of {@link ThreePointsMenuBar}.
  * <br>By "white-box testing" we mean that we <i>know</i> about the internals of the software under test,
  * but we act strictly through the class interface, like a client would.
+ * <br><br>
+ * <b>WARNING</b>: the tests below make use of the Focus Subsystem and may not work if the mouse or the keyboard
+ * bring the focus outside the windows that are instantiated. It is recommended <u>not to interact with the computer</u> while the
+ * tests are running.
  */
 class ThreePointsMenuBarWhiteBoxTest {
     private final static int NUM_POINTS_INDEX = 1;
