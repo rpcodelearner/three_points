@@ -39,7 +39,7 @@ class ThreePointsModel {
                 computeAlignedPoints();
                 break;
             default:
-                throw new RuntimeException("Unexpected pattern for focal points: " + userChoices.currentFociPattern);
+                throw new RuntimeException("Unexpected pattern for focal points: " + userChoices.getFociPattern());
         }
     }
 

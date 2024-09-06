@@ -109,62 +109,76 @@ class ThreePointsMenuBar extends JMenuBar {
             model.computePoints();
         }
         numPointsInputField.setText(Integer.toString(userChoices.getNumPts()));
-
         view.repaint();
     }
 
     private boolean isNumPointsUpdated() {
-        try {
-            final int readNumber = Integer.parseInt(numPointsInputField.getText());
-            if (readNumber > 0) {
-                if (readNumber != userChoices.getNumPts()) {
-                    userChoices.setNumPts(readNumber);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } catch (NumberFormatException ignored) {
-            numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
+        final int validReading = getValidReading();
+        if (validReading != userChoices.getNumPts()) {
+            userChoices.setNumPts(validReading);
+            return true;
         }
         return false;
     }
 
+    private int getValidReading() {
+        try {
+            int result = Integer.parseInt(numPointsInputField.getText());
+            if (result > 0) return result;
+        } catch (NumberFormatException ignored) {
+        }
+        return userChoices.getNumPts();
+    }
 
     class MenuKeyListener extends KeyAdapter {
 
         @Override
         public void keyReleased(KeyEvent e) {
+            keyReleasedOnNumPoints(e);
+        }
+
+        private void keyReleasedOnNumPoints(KeyEvent e) {
             if (e.getSource().equals(numPointsInputField)) {
                 if (KeyEvent.getKeyText(e.getKeyCode()).matches("[a-zA-Z]")) {
                     numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
                 }
             }
-            super.keyReleased(e);
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_F5) {
-                userChoices.setFociPattern((String) patternCtrl.getSelectedItem());
-                model.computePoints();
-                view.repaint();
-            }
+            keyPressedF5(e);
+            keyPressedOnNumPoints(e);
+        }
+
+        private void keyPressedOnNumPoints(KeyEvent e) {
             if (e.getSource().equals(numPointsInputField)) {
-                if (KeyEvent.getKeyText(e.getKeyCode()).matches("[a-zA-Z]")) {
-                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
-                }
+                int currentNumPoints = getValidReading();
                 if (KeyEvent.getKeyText(e.getKeyCode()).equals("Up")) {
-                    userChoices.setNumPts(userChoices.getNumPts() + 1);
-                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
+                    numPointsInputField.setText(String.valueOf(currentNumPoints + 1));
                 }
                 if (KeyEvent.getKeyText(e.getKeyCode()).equals("Down")) {
-                    userChoices.setNumPts(userChoices.getNumPts() - 1);
-                    numPointsInputField.setText(String.valueOf(userChoices.getNumPts()));
+                    numPointsInputField.setText(String.valueOf(currentNumPoints - 1));
+                }
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    model.computePoints();
+                    view.repaint();
                 }
             }
-            super.keyPressed(e);
         }
+
+        private void keyPressedF5(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_F5) {
+                if (userChoices.getFociPattern().toLowerCase().contains("random")) {
+                    if (getValidReading() != userChoices.getNumPts()) {
+                        userChoices.setNumPts(getValidReading());
+                    }
+                    model.computePoints();
+                    view.repaint();
+                }
+            }
+        }
+
     }
 
 }

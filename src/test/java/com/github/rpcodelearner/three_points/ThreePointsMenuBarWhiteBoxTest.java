@@ -1,6 +1,7 @@
 package com.github.rpcodelearner.three_points;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * The purpose of {@link ThreePointsMenuBarWhiteBoxTest} is to do a high-coverage test of {@link ThreePointsMenuBar}.
@@ -23,7 +25,15 @@ class ThreePointsMenuBarWhiteBoxTest {
     private final static int NUM_POINTS_INDEX = 1;
     private final static int FOCI_PATTERN_INDEX = 3;
     private final static int DRAWING_STYLE_INDEX = 5;
+    private static final int DEFAULT_NUMBER_FOCI = 3;
     TestFrame testFrame;
+
+    @BeforeAll
+    static void warnTheTester() {
+        JOptionPane.showMessageDialog(null, "WARNING: if you interact with the computer before the next tests are over, you will increase the risk of false failures");
+        pause(250);
+    }
+
 
     @BeforeEach
     void setUp() {
@@ -41,7 +51,7 @@ class ThreePointsMenuBarWhiteBoxTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        pause(250);
+        pause(350);
         assertFalse(testFrame.isActive());
         assertFalse(testFrame.isVisible());
     }
@@ -52,13 +62,14 @@ class ThreePointsMenuBarWhiteBoxTest {
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_UP);
-        assertEquals("4", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI + 1), numPointsJTextField.getText());
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_DOWN);
-        assertEquals("3", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
     void numPointsTypeDifferentNumber() {
+        assumeTrue(DEFAULT_NUMBER_FOCI != 5);
         JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
         typeUnicodeChar(numPointsJTextField, '5');
@@ -72,9 +83,10 @@ class ThreePointsMenuBarWhiteBoxTest {
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
-        typeUnicodeChar(numPointsJTextField, '3');
+        char defaultValueChar = String.valueOf(DEFAULT_NUMBER_FOCI).charAt(0);
+        typeUnicodeChar(numPointsJTextField, defaultValueChar);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_ENTER);
-        assertEquals("3", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
@@ -85,7 +97,7 @@ class ThreePointsMenuBarWhiteBoxTest {
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
         typeUnicodeChar(numPointsJTextField, '0');
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_ENTER);
-        assertEquals("3", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
@@ -94,18 +106,19 @@ class ThreePointsMenuBarWhiteBoxTest {
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
         typeUnicodeChar(numPointsJTextField, 'a');
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_ENTER);
-        assertEquals("3", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
     void numPointsInvalidNonNumericInputB() {
         JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_B);
-        assertEquals("3", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
     void numPointsUpdatedFocusLost() {
+        assumeTrue(DEFAULT_NUMBER_FOCI != 1);
         JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.requestFocusInWindow();
         pause(200);
@@ -124,7 +137,7 @@ class ThreePointsMenuBarWhiteBoxTest {
         assertTrue(numPointsJTextField.isFocusOwner());
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_TAB);
         assertFalse(numPointsJTextField.isFocusOwner());
-        assertEquals("3", numPointsJTextField.getText());
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
@@ -139,9 +152,19 @@ class ThreePointsMenuBarWhiteBoxTest {
     void fociPatterF5() {
         // We suppress the unchecked-cast warning because we expect the test to fail if the code under test changes
         @SuppressWarnings({"unchecked"}) JComboBox<String> fociPatternCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(FOCI_PATTERN_INDEX);
-        final String currentSelection = (String) fociPatternCombo.getSelectedItem();
+        final String initialSelection = (String) fociPatternCombo.getSelectedItem();
+        // "Random" pattern not selected
         pressNonUnicodeKey(fociPatternCombo, KeyEvent.VK_F5);
-        assertEquals(currentSelection, fociPatternCombo.getSelectedItem());
+        assertEquals(initialSelection, fociPatternCombo.getSelectedItem());
+        // "Random" pattern selected
+        fociPatternCombo.setSelectedIndex(1); // an ActionEvent object is automatically produced
+        assertNotEquals(initialSelection, fociPatternCombo.getSelectedItem());
+        pressNonUnicodeKey(fociPatternCombo, KeyEvent.VK_F5);
+        // "Random" pattern selected and foci number changed
+        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        numPointsJTextField.setText(String.valueOf(DEFAULT_NUMBER_FOCI + 1));
+        pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_F5);
+        assertNotEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
 
     @Test
@@ -154,9 +177,9 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     private void pressNonUnicodeKey(Component component, int keyCode) {
         component.dispatchEvent(new KeyEvent(component, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, keyCode, KeyEvent.CHAR_UNDEFINED));
-        pause(50);
+        pause(100);
         component.dispatchEvent(new KeyEvent(component, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, keyCode, KeyEvent.CHAR_UNDEFINED));
-        pause(50);
+        pause(100);
     }
 
     private void typeUnicodeChar(Component component, char keyChar) {
@@ -171,7 +194,7 @@ class ThreePointsMenuBarWhiteBoxTest {
      *
      * @param time_ms Sleeping time in millisecond
      */
-    private void pause(int time_ms) {
+    private static void pause(int time_ms) {
         try {
             Thread.sleep(time_ms);
         } catch (InterruptedException e) {

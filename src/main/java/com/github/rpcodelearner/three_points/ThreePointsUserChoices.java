@@ -5,7 +5,7 @@ import java.util.List;
 
 class ThreePointsUserChoices {
     private int numPts = 3; // this default gives the app its name
-    FociPattern currentFociPattern = FociPattern.CIRCULAR;
+    private FociPattern currentFociPattern = FociPattern.CIRCULAR;
     DrawingStyle currentDrawingStyle = DrawingStyle.THICK;
 
     public int getNumPts() {
