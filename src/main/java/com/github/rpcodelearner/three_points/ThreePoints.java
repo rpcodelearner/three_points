@@ -7,6 +7,8 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 public class ThreePoints {
 
+    JFrame window; // package-private for testing purposes
+
     public ThreePoints() {
         final ThreePointsUserChoices userChoices = new ThreePointsUserChoices();
         final ThreePointsModel model = new ThreePointsModel(userChoices);
@@ -18,7 +20,7 @@ public class ThreePoints {
     }
 
     private void createAndShowGUI(ThreePointsModel model, ThreePointsUserChoices userChoices) {
-        final JFrame window = createAndSetupWindow();
+        window = createAndSetupWindow();
         final JPanel view = new ThreePointsPanel(model);
 
         window.setJMenuBar(new ThreePointsMenuBar(model, userChoices, view));

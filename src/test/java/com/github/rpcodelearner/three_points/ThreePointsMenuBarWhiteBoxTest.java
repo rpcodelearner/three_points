@@ -26,7 +26,8 @@ class ThreePointsMenuBarWhiteBoxTest {
     private final static int FOCI_PATTERN_INDEX = 3;
     private final static int DRAWING_STYLE_INDEX = 5;
     private static final int DEFAULT_NUMBER_FOCI = 3;
-    TestFrame testFrame;
+    private ThreePoints app;
+    private JFrame appFrame;
 
     @BeforeAll
     static void warnTheTester() {
@@ -38,7 +39,9 @@ class ThreePointsMenuBarWhiteBoxTest {
     @BeforeEach
     void setUp() {
         try {
-            SwingUtilities.invokeAndWait(() -> testFrame = new TestFrame());
+            SwingUtilities.invokeAndWait(() -> app = new ThreePoints());
+            pause(250);
+            appFrame = app.window;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -47,18 +50,18 @@ class ThreePointsMenuBarWhiteBoxTest {
     @AfterEach
     void tearDown() {
         try {
-            SwingUtilities.invokeAndWait(() -> testFrame.dispose());
+            SwingUtilities.invokeAndWait(() -> appFrame.dispose());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        pause(350);
-        assertFalse(testFrame.isActive());
-        assertFalse(testFrame.isVisible());
+        pause(150);
+        assertFalse(appFrame.isActive());
+        assertFalse(appFrame.isVisible());
     }
 
     @Test
     void numPointsArrowKeys() {
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_UP);
@@ -70,7 +73,7 @@ class ThreePointsMenuBarWhiteBoxTest {
     @Test
     void numPointsTypeDifferentNumber() {
         assumeTrue(DEFAULT_NUMBER_FOCI != 5);
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
         typeUnicodeChar(numPointsJTextField, '5');
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_ENTER);
@@ -79,7 +82,7 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void numPointsTypeSameNumber() {
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
@@ -91,7 +94,7 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void numPointsInvalidNumericInput() {
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
@@ -102,7 +105,7 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void numPointsInvalidNonNumericInputA() {
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
         typeUnicodeChar(numPointsJTextField, 'a');
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_ENTER);
@@ -111,7 +114,7 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void numPointsInvalidNonNumericInputB() {
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_B);
         assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
     }
@@ -119,7 +122,7 @@ class ThreePointsMenuBarWhiteBoxTest {
     @Test
     void numPointsUpdatedFocusLost() {
         assumeTrue(DEFAULT_NUMBER_FOCI != 1);
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
@@ -131,7 +134,7 @@ class ThreePointsMenuBarWhiteBoxTest {
 
     @Test
     void numPointsUnchangedFocusLost() {
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.requestFocusInWindow();
         pause(200);
         assertTrue(numPointsJTextField.isFocusOwner());
@@ -143,7 +146,7 @@ class ThreePointsMenuBarWhiteBoxTest {
     @Test
     void fociPatterSelection() {
         // We suppress the unchecked-cast warning because we expect the test to fail if the code under test changes
-        @SuppressWarnings({"unchecked"}) JComboBox<String> fociPatternCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(FOCI_PATTERN_INDEX);
+        @SuppressWarnings({"unchecked"}) JComboBox<String> fociPatternCombo = (JComboBox<String>) appFrame.getJMenuBar().getComponent(FOCI_PATTERN_INDEX);
         fociPatternCombo.setSelectedIndex(1); // an ActionEvent object is automatically produced
         assertEquals("Random", fociPatternCombo.getSelectedItem());
     }
@@ -151,7 +154,7 @@ class ThreePointsMenuBarWhiteBoxTest {
     @Test
     void fociPatterF5() {
         // We suppress the unchecked-cast warning because we expect the test to fail if the code under test changes
-        @SuppressWarnings({"unchecked"}) JComboBox<String> fociPatternCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(FOCI_PATTERN_INDEX);
+        @SuppressWarnings({"unchecked"}) JComboBox<String> fociPatternCombo = (JComboBox<String>) appFrame.getJMenuBar().getComponent(FOCI_PATTERN_INDEX);
         final String initialSelection = (String) fociPatternCombo.getSelectedItem();
         // "Random" pattern not selected
         pressNonUnicodeKey(fociPatternCombo, KeyEvent.VK_F5);
@@ -161,7 +164,7 @@ class ThreePointsMenuBarWhiteBoxTest {
         assertNotEquals(initialSelection, fociPatternCombo.getSelectedItem());
         pressNonUnicodeKey(fociPatternCombo, KeyEvent.VK_F5);
         // "Random" pattern selected and foci number changed
-        JTextField numPointsJTextField = (JTextField) testFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         numPointsJTextField.setText(String.valueOf(DEFAULT_NUMBER_FOCI + 1));
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_F5);
         assertNotEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
@@ -170,7 +173,7 @@ class ThreePointsMenuBarWhiteBoxTest {
     @Test
     void drawingStyleSelection() {
         // We suppress the unchecked-cast warning because we expect the test to fail if the code under test changes
-        @SuppressWarnings({"unchecked"}) JComboBox<String> drawingStyleCombo = (JComboBox<String>) testFrame.getJMenuBar().getComponent(DRAWING_STYLE_INDEX);
+        @SuppressWarnings({"unchecked"}) JComboBox<String> drawingStyleCombo = (JComboBox<String>) appFrame.getJMenuBar().getComponent(DRAWING_STYLE_INDEX);
         drawingStyleCombo.setSelectedIndex(1); // an ActionEvent object is automatically produced
         assertEquals("Medium", drawingStyleCombo.getSelectedItem());
     }
@@ -200,25 +203,6 @@ class ThreePointsMenuBarWhiteBoxTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    /**
-     * A containing-window and dependencies for {@link ThreePointsMenuBar}
-     */
-    private static class TestFrame extends JFrame {
-
-        TestFrame() {
-            ThreePointsUserChoices userChoices = new ThreePointsUserChoices();
-            ThreePointsModel model = new ThreePointsModel(userChoices);
-            final JPanel view = new ThreePointsPanel(model);
-            ThreePointsMenuBar menu = new ThreePointsMenuBar(model, userChoices, view);
-            this.setJMenuBar(menu);
-            this.add(view);
-            this.pack();
-            this.setVisible(true);
-        }
-
     }
 
 }
