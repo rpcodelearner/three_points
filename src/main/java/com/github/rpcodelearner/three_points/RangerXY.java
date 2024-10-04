@@ -37,4 +37,27 @@ class RangerXY {
     double toMathY(int pixel) {
         return bottomLeft.y + (pixel - firstPixel) * getPixelSizeY();
     }
+
+    void setPixelDim(Dimension dimension) {
+        pixelDim = dimension;
+    }
+
+    void setCornerPoints(PlanePoint bottomLeft, PlanePoint topRight) {
+        this.bottomLeft = bottomLeft;
+        this.topRight = topRight;
+    }
+
+    void rescaleX(double xFactor) {
+        final double midPoint = (topRight.x + bottomLeft.x) / 2.0;
+        final double halfSize = (topRight.x - midPoint) * xFactor;
+        bottomLeft = new PlanePoint(midPoint - halfSize, bottomLeft.y);
+        topRight = new PlanePoint(midPoint + halfSize, topRight.y);
+    }
+
+    void rescaleY(double yFactor) {
+        final double midPoint = (topRight.y + bottomLeft.y) / 2.0;
+        final double halfSize = (topRight.y - midPoint) * yFactor;
+        bottomLeft = new PlanePoint(bottomLeft.x, midPoint - halfSize);
+        topRight = new PlanePoint(topRight.x, midPoint + halfSize);
+    }
 }
