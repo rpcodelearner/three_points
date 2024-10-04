@@ -2,6 +2,9 @@ package com.github.rpcodelearner.three_points;
 
 import java.awt.*;
 
+/**
+ * RangerXY maps pixels to mathematical points and vice versa
+ */
 class RangerXY {
     final int firstPixel = 0;
     Dimension pixelDim;

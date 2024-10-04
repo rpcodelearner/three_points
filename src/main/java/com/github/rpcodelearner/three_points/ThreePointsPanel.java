@@ -10,8 +10,11 @@ class ThreePointsPanel extends JPanel {
     static final int X_SIZE = 500;
     static final int Y_SIZE = 500;
     private final ThreePointsModel model;
-    private final Ranger xRanger = new Ranger(0, X_SIZE, -1, 1);
-    private final Ranger yRanger = new Ranger(0, Y_SIZE, -1, 1);
+    private final RangerXY rangerXY = new RangerXY(
+            new Dimension(X_SIZE, Y_SIZE),
+            new PlanePoint(-1, -1),
+            new PlanePoint(1, 1)
+            );
 
     ThreePointsPanel(ThreePointsModel model) {
         super();
@@ -40,7 +43,7 @@ class ThreePointsPanel extends JPanel {
     }
 
     private PlanePoint screenToPlanePoint(int x, int y) {
-        return new PlanePoint(xRanger.toMath(x), yRanger.toMath(y));
+        return new PlanePoint(rangerXY.toMathX(x), rangerXY.toMathY(y));
     }
 
     private void paintFocuses(Graphics2D g2d) {
@@ -53,7 +56,7 @@ class ThreePointsPanel extends JPanel {
     }
 
     private Pixel planePointToPixel(PlanePoint planePoint) {
-        return new Pixel(xRanger.toPixel(planePoint.x), yRanger.toPixel(planePoint.y));
+        return new Pixel(rangerXY.toPixelX(planePoint.x), rangerXY.toPixelY(planePoint.y));
     }
 
 }
