@@ -1,7 +1,6 @@
 package com.github.rpcodelearner.three_points;
 
 import java.awt.*;
-import java.awt.geom.Dimension2D;
 
 class RangerXY {
     final int firstPixel = 0;
@@ -15,15 +14,27 @@ class RangerXY {
         this.topRight = topRight;
     }
 
-    double getPixelSize() {
+    double getPixelSizeX() {
         return (topRight.x - bottomLeft.x) / pixelDim.getWidth();
     }
 
-    int toPixelX(double x) {
-        return (int) Math.round(firstPixel + (x - bottomLeft.x) / getPixelSize());
+    double getPixelSizeY() {
+        return (topRight.y - bottomLeft.y) / pixelDim.getHeight();
     }
 
-    double toMath(int pixel) {
-        return bottomLeft.x + (pixel - firstPixel) * getPixelSize();
+    int toPixelX(double x) {
+        return (int) Math.round(firstPixel + (x - bottomLeft.x) / getPixelSizeX());
+    }
+
+    int toPixelY(double y) {
+        return (int) Math.round(firstPixel + (y - bottomLeft.y) / getPixelSizeY());
+    }
+
+    double toMathX(int pixel) {
+        return bottomLeft.x + (pixel - firstPixel) * getPixelSizeX();
+    }
+
+    double toMathY(int pixel) {
+        return bottomLeft.y + (pixel - firstPixel) * getPixelSizeY();
     }
 }

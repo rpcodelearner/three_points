@@ -9,72 +9,81 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RangerXYTest {
     private final int firstPixel = 0;
-    private final int lastPixel = 512;  // total is 513px, odd number, so there is a perfectly centered pixel
-    private final int centerPixel = 256;
-    private final double minReal = -1.0;
-    private final double maxReal = 1.0;
+    private final int lastPixelX = 512;  // total is odd number 513px, so there is a centered pixel
+    private final int lastPixelY = 256;  // total is odd number 257px, so there is a centered pixel
+    private final Dimension testDim = new Dimension(lastPixelX, lastPixelY);
+    private final int centerPixelX = 256;
+    private final int centerPixelY = 128;
+    private final PlanePoint testLeftBottom = new PlanePoint(-1.0, -1.0);
+    private final PlanePoint testTopRight = new PlanePoint(1.0, 1.0);
     private final double midReal = 0.0;
-    private RangerXY ranger;
+    private RangerXY testRanger;
 
     @BeforeEach
     void setUp() {
-        int pixelSide = lastPixel - firstPixel;
-        ranger = new RangerXY(new Dimension(pixelSide, pixelSide), new PlanePoint(minReal, minReal), new PlanePoint(maxReal, maxReal));
+        testRanger = new RangerXY(testDim, testLeftBottom, testTopRight);
     }
 
     @Test
     void constructor() {
-        assertAll("constructor test",
-                () -> assertEquals(lastPixel, ranger.pixelDim.width),
-                () -> assertEquals(maxReal, ranger.topRight.x),
-                () -> assertEquals(maxReal, ranger.topRight.y),
-                () -> assertEquals(minReal, ranger.bottomLeft.x),
-                () -> assertEquals(minReal, ranger.bottomLeft.y)
-        );
+        assertAll(
+                () -> assertEquals(lastPixelX, testRanger.pixelDim.width),
+                () -> assertEquals(lastPixelY, testRanger.pixelDim.height),
+                () -> assertEquals(testTopRight.x, testRanger.topRight.x),
+                () -> assertEquals(testTopRight.y, testRanger.topRight.y),
+                () -> assertEquals(testLeftBottom.x, testRanger.bottomLeft.x),
+                () -> assertEquals(testLeftBottom.y, testRanger.bottomLeft.y));
     }
 
     @Test
     void pixelSize() {
-        assertEquals(2.0/512, ranger.getPixelSize());
+        assertAll(
+                () -> assertEquals(2.0 / 512, testRanger.getPixelSizeX()),
+                () -> assertEquals(2.0 / 256, testRanger.getPixelSizeY()));
     }
 
 
     @Test
-    void testFirstPixel() {
-        assertEquals(firstPixel, ranger.toPixelX(minReal));
+    void testFirstPixels() {
+        assertAll(
+                () -> assertEquals(firstPixel, testRanger.toPixelX(testLeftBottom.x)),
+                () -> assertEquals(firstPixel, testRanger.toPixelY(testLeftBottom.y)));
     }
 
     @Test
     void testFirstPoint() {
-        assertEquals(minReal, ranger.toMath(firstPixel));
+        assertAll(
+                () -> assertEquals(testLeftBottom.x, testRanger.toMathX(firstPixel)),
+                () -> assertEquals(testLeftBottom.y, testRanger.toMathY(firstPixel)));
     }
 
     @Test
-    void testLastPixel() {
-        assertEquals(lastPixel, ranger.toPixelX(maxReal));
+    void testLastPixels() {
+        assertAll(
+                () -> assertEquals(lastPixelX, testRanger.toPixelX(testTopRight.x)),
+                () -> assertEquals(lastPixelY, testRanger.toPixelY(testTopRight.y)));
     }
 
     @Test
     void testLastPoint() {
-        assertEquals(maxReal, ranger.toMath(lastPixel));
+        assertAll(
+                () -> assertEquals(testTopRight.x, testRanger.toMathX(lastPixelX)),
+                () -> assertEquals(testTopRight.y, testRanger.toMathY(lastPixelY)));
     }
 
     @Test
     void testCenterPixel() {
-        assertEquals(centerPixel, ranger.toPixelX(midReal));
+        assertAll(
+                () -> assertEquals(centerPixelX, testRanger.toPixelX(midReal)),
+                () -> assertEquals(centerPixelY, testRanger.toPixelY(midReal)));
     }
 
     @Test
     void testMiddlePoint() {
-        assertEquals(midReal, ranger.toMath(centerPixel));
+        assertAll(
+                () -> assertEquals(midReal, testRanger.toMathX(centerPixelX)),
+                () -> assertEquals(midReal, testRanger.toMathY(centerPixelY)));
     }
-
-//    @Test
-//    void testInvertedPixelRange() {
-//        Ranger vertAxis = new Ranger(511, 0, -1.0, 1.0);
-//        assertEquals(0, vertAxis.toPixel(1.0));
-//        assertEquals(511, vertAxis.toPixel(-1.0));
-//    }
 
     @Test
     void testInvertedMathRange() {
@@ -86,44 +95,40 @@ class RangerXYTest {
         assertEquals(511, unusualRange.toPixelX(-1.0));
     }
 
-//    @Test
-//    void testInvertedPixelAndMathRanges() {
-//        Ranger doubleTrouble = new Ranger(511, 0, 1.0, -1.0);
-//        assertEquals(511, doubleTrouble.toPixel(1.0));
-//        assertEquals(0, doubleTrouble.toPixel(-1.0));
-//    }
-
     @Test
     void testCenterWithTwoPixels() {
-        int first = 0;
-        int last = 1;
-        final Dimension twoPixels = new Dimension(last - first, last - first);
-        final PlanePoint leftBottom = new PlanePoint(0.0, 0.0);
-        final PlanePoint topRight = new PlanePoint(1.0, 1.0);
-        RangerXY ranger = new RangerXY(twoPixels, leftBottom, topRight);
-        double min = 0.0;
-        double max = 1.0;
+        final double min = 0.0;
+        final double max = 1.0;
+        final PlanePoint leftBottom = new PlanePoint(min, min);
+        final PlanePoint topRight = new PlanePoint(max, max);
+        final Dimension twoPixels = new Dimension(1, 1);
+        RangerXY twoPixRanger = new RangerXY(twoPixels, leftBottom, topRight);
         final double mid = (max - min) / 2.0;
         final double delta = 0.0001;
-        assertEquals(first, ranger.toPixelX(mid - delta));
-        assertEquals(last, ranger.toPixelX(mid + delta));
+        assertEquals(0, twoPixRanger.toPixelX(mid - delta));
+        assertEquals(0, twoPixRanger.toPixelY(mid - delta));
+        assertEquals(1, twoPixRanger.toPixelX(mid + delta));
+        assertEquals(1, twoPixRanger.toPixelY(mid + delta));
     }
 
-//    @Test
-//    void testCenterWithEvenPixels() {
-//        int first = 0;
-//        int last = 511;
-//        double min = -1234.5;
-//        double max = 5432.1;
-//        final double pixelSize = (max - min) / (last - first);
-//        Ranger ranger = new Ranger(first, last, min, max);
-//        final double mid = (max + min) / 2.0;
-//        final int center = (last + first) / 2;
-//        final double delta = pixelSize / 1.99999; // slightly larger than half pixel size, to accommodate for rounding
-//
-//        // with an even number of pixels, the center could end onto either pixel in the middle
-//        assertTrue(center == ranger.toPixel(mid) || (center + 1) == ranger.toPixel(mid));
-//        assertEquals(mid, ranger.toMath(center), delta);
-//    }
+    @Test
+    void testCenterWithEvenPixels() {
+        final Dimension evenPixels = new Dimension(511, 511);
+        final int centerX = 511 / 2;
+        final int centerY = 511 / 2;
+        final double min = -1234.5;
+        final double max = 5432.1;
+        final double mid = (max + min) / 2.0;
+        final PlanePoint pLeftBottom = new PlanePoint(min, min);
+        final PlanePoint pTopRight = new PlanePoint(max, max);
+        final RangerXY ranger = new RangerXY(evenPixels, pLeftBottom, pTopRight);
+        final double delta = ranger.getPixelSizeX() / 1.99999; // slightly larger than half pixel size, to accommodate for rounding
+
+        // with an even number of pixels, the center could end onto either pixel in the middle
+        assertTrue(centerX == ranger.toPixelX(mid) || (centerX + 1) == ranger.toPixelX(mid));
+        assertTrue(centerY == ranger.toPixelY(mid) || (centerY + 1) == ranger.toPixelY(mid));
+        assertEquals(mid, ranger.toMathX(centerX), delta);
+        assertEquals(mid, ranger.toMathY(centerY), delta);
+    }
 
 }
