@@ -165,4 +165,14 @@ class RangerXYTest {
         assertEquals(midReal, testRanger.toMathX(centerPixelX));
         assertEquals(midReal, testRanger.toMathY(centerPixelY));
     }
+
+    @Test
+    void recenter() {
+        final PlanePoint updatedCenter = new PlanePoint(2.0, 3.0);
+        testRanger.recenter(updatedCenter);
+        assertEquals(2.0, testRanger.topRight.x - testRanger.bottomLeft.x);
+        assertEquals(2.0, testRanger.topRight.y - testRanger.bottomLeft.y);
+        assertEquals(updatedCenter.x, testRanger.toMathX(centerPixelX));
+        assertEquals(updatedCenter.y, testRanger.toMathY(centerPixelY));
+    }
 }

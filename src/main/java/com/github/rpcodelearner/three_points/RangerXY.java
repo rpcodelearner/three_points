@@ -60,4 +60,9 @@ class RangerXY {
         bottomLeft = new PlanePoint(bottomLeft.x, midPoint - halfSize);
         topRight = new PlanePoint(topRight.x, midPoint + halfSize);
     }
+
+    void recenter(PlanePoint updatedCenter) {
+        bottomLeft = new PlanePoint(bottomLeft.x + updatedCenter.x, bottomLeft.y + updatedCenter.y);
+        topRight = new PlanePoint(topRight.x + updatedCenter.x, topRight.y + updatedCenter.y);
+    }
 }
