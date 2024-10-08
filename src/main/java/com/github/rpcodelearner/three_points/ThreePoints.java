@@ -35,7 +35,7 @@ public class ThreePoints {
         frame.setLocation(800, 150);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setUndecorated(false);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setTitle(ConfigAppStrings.getStringFor("AppWindowTitle"));
         return frame;
     }

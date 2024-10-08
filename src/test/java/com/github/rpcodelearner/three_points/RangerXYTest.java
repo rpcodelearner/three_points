@@ -175,4 +175,17 @@ class RangerXYTest {
         assertEquals(updatedCenter.x, testRanger.toMathX(centerPixelX));
         assertEquals(updatedCenter.y, testRanger.toMathY(centerPixelY));
     }
+
+    @Test
+    void setMathCenterToPixel() {
+        final double knownPixelSizeX = testRanger.getPixelSizeX();
+        final double knownPixelSizeY = testRanger.getPixelSizeY();
+        final int pixelsOffsetX = 100;
+        final int pixelsOffsetY = 200;
+        testRanger.setMathCenterToPixel(pixelsOffsetX, pixelsOffsetY);
+        assertEquals(pixelsOffsetX, testRanger.toPixelX(0.0));
+        assertEquals(pixelsOffsetY, testRanger.toPixelY(0.0));
+        assertEquals(knownPixelSizeX, testRanger.getPixelSizeX());
+        assertEquals(knownPixelSizeY, testRanger.getPixelSizeY());
+    }
 }

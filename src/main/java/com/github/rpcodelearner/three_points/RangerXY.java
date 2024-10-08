@@ -68,4 +68,11 @@ class RangerXY {
         bottomLeft = new PlanePoint(bottomLeft.x + updatedCenter.x, bottomLeft.y + updatedCenter.y);
         topRight = new PlanePoint(topRight.x + updatedCenter.x, topRight.y + updatedCenter.y);
     }
+
+    void setMathCenterToPixel(int cx, int cy) {
+        double xOffset = toMathX(cx);
+        double yOffset = toMathY(cy);
+        recenter(new PlanePoint(-xOffset, -yOffset));
+    }
+
 }

@@ -2,6 +2,7 @@ package com.github.rpcodelearner.three_points;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.*;
 
 class ThreePointsMenuBar extends JMenuBar {
@@ -43,6 +44,8 @@ class ThreePointsMenuBar extends JMenuBar {
 
     private void addNumPointTextField() {
         numPointsInputField = new JTextField(Integer.toString(userChoices.getNumPts()));
+        numPointsInputField.setMinimumSize(new Dimension(45, 24));
+        numPointsInputField.setMaximumSize(new Dimension(45, 24));
         numPointsInputField.setHorizontalAlignment(JTextField.RIGHT);
         numPointsInputField.addActionListener(this::changePointsNumber);
         numPointsInputField.addFocusListener(new FocusAdapter() {
@@ -71,6 +74,7 @@ class ThreePointsMenuBar extends JMenuBar {
     private void addPatternsCtrl() {
         String[] patterns = userChoices.getFociPatternsArray();
         patternCtrl = new JComboBox<>(patterns);
+        patternCtrl.setMaximumSize(new Dimension(93, 24));
         patternCtrl.setSelectedItem(patterns[0]);
         patternCtrl.addActionListener(this::selectPattern);
         patternCtrl.addKeyListener(menuKeyListener);
@@ -93,6 +97,7 @@ class ThreePointsMenuBar extends JMenuBar {
 
     private void addGraphicsMenu() {
         drawingCtrl = new JComboBox<>(userChoices.getDrawingStylesArray());
+        drawingCtrl.setMaximumSize(new Dimension(95, 24));
         drawingCtrl.addActionListener(this::selectDrawingStyle);
         drawingCtrl.addKeyListener(menuKeyListener);
         drawingCtrl.setToolTipText(DRAWING_CTRL_TOOLTIP_TEXT);
