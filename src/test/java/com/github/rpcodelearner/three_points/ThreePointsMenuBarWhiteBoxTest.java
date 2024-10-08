@@ -104,6 +104,16 @@ class ThreePointsMenuBarWhiteBoxTest {
     }
 
     @Test
+    void numPointsEmptyInput() {
+        JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
+        numPointsJTextField.requestFocusInWindow();
+        pause(200);
+        pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
+        pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_ENTER);
+        assertEquals(String.valueOf(DEFAULT_NUMBER_FOCI), numPointsJTextField.getText());
+   }
+
+    @Test
     void numPointsInvalidNonNumericInputA() {
         JTextField numPointsJTextField = (JTextField) appFrame.getJMenuBar().getComponent(NUM_POINTS_INDEX);
         pressNonUnicodeKey(numPointsJTextField, KeyEvent.VK_BACK_SPACE);
