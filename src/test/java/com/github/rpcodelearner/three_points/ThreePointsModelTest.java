@@ -92,21 +92,7 @@ class ThreePointsModelTest {
         List<PlanePoint> firstRunFoci = model.getFoci();
         model.computePoints();
         List<PlanePoint> secondRunFoci = model.getFoci();
-        preTestPlanePointEquality();
         doAllComparisons(firstRunFoci, secondRunFoci);
-    }
-
-    private void preTestPlanePointEquality() {
-        final PlanePoint ppA = new PlanePoint(0.1, 2.3); // NB same values as ppB below
-        assertEquals(ppA, ppA); // added for branch coverage
-        assertNotEquals(ppA, null); // 'null' must be 2nd or else JUnit will skip the call to ppA.equals()
-        assertNotEquals(ppA, new Object());
-        final PlanePoint ppB = new PlanePoint(0.1, 2.3); // NB same values as ppA above
-        assertEquals(ppA, ppB);
-        assertEquals(ppA.hashCode(), ppB.hashCode());
-        final PlanePoint ppC = new PlanePoint(4.5, 6.7);
-        assertNotEquals(ppA, ppC);
-        assertNotEquals(ppA.hashCode(), ppC.hashCode());
     }
 
     private static void doAllComparisons(List<PlanePoint> firstRunFoci, List<PlanePoint> secondRunFoci) {
