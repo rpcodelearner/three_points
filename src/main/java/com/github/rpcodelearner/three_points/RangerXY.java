@@ -25,20 +25,28 @@ class RangerXY {
         return (topRight.y - bottomLeft.y) / pixelDim.getHeight();
     }
 
-    int toPixelX(double x) {
+    private int toPixelX(double x) {
         return (int) Math.round(firstPixel + (x - bottomLeft.x) / getPixelSizeX());
     }
 
-    int toPixelY(double y) {
+    private int toPixelY(double y) {
         return (int) Math.round(firstPixel + (y - bottomLeft.y) / getPixelSizeY());
     }
 
-    double toMathX(int pixel) {
+    Pixel toPixel(PlanePoint point) {
+        return new Pixel(toPixelX(point.x), toPixelY(point.y));
+    }
+
+    private double toMathX(int pixel) {
         return bottomLeft.x + (pixel - firstPixel) * getPixelSizeX();
     }
 
-    double toMathY(int pixel) {
+    private double toMathY(int pixel) {
         return bottomLeft.y + (pixel - firstPixel) * getPixelSizeY();
+    }
+
+    PlanePoint toMath(Pixel pixel) {
+        return new PlanePoint(toMathX(pixel.x), toMathY(pixel.y));
     }
 
     void setPixelDim(Dimension dimension) {
@@ -69,9 +77,9 @@ class RangerXY {
         topRight = new PlanePoint(topRight.x + updatedCenter.x, topRight.y + updatedCenter.y);
     }
 
-    void setMathCenterToPixel(int cx, int cy) {
-        double xOffset = toMathX(cx);
-        double yOffset = toMathY(cy);
+    void setMathCenterToPixel(Pixel newCenter) {
+        double xOffset = toMathX(newCenter.x);
+        double yOffset = toMathY(newCenter.y);
         recenter(new PlanePoint(-xOffset, -yOffset));
     }
 

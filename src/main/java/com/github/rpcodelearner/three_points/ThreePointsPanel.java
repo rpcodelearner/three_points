@@ -39,13 +39,13 @@ class ThreePointsPanel extends JPanel {
     }
 
     private void recenterPanel() {
-        rangerXY.setMathCenterToPixel(xSize/2, ySize/2);
+        rangerXY.setMathCenterToPixel(new Pixel(xSize/2, ySize/2));
     }
 
     private void paintBands(Graphics2D g2d) {
         for (int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
-                if (model.isPlot(screenToPlanePoint(x, y))) {
+                if (model.isPlot(rangerXY.toMath(new Pixel(x, y)))) {
                     g2d.setColor(Color.BLACK);
                     g2d.fillRect(x, y, 1, 1);
                 }
@@ -53,21 +53,13 @@ class ThreePointsPanel extends JPanel {
         }
     }
 
-    private PlanePoint screenToPlanePoint(int x, int y) {
-        return new PlanePoint(rangerXY.toMathX(x), rangerXY.toMathY(y));
-    }
-
     private void paintFocuses(Graphics2D g2d) {
         final int half_size = 2;
         g2d.setColor(Color.RED);
 
         List<Pixel> foci;
-        foci = model.getFoci().stream().map(this::planePointToPixel).collect(Collectors.toList());
+        foci = model.getFoci().stream().map(rangerXY::toPixel).collect(Collectors.toList());
         foci.forEach(pixel -> g2d.fillOval(pixel.x - half_size, pixel.y -half_size, 2*half_size, 2*half_size));
-    }
-
-    private Pixel planePointToPixel(PlanePoint planePoint) {
-        return new Pixel(rangerXY.toPixelX(planePoint.x), rangerXY.toPixelY(planePoint.y));
     }
 
 }
