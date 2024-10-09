@@ -43,6 +43,8 @@ class ThreePointsPanel extends JPanel {
     }
 
     private void paintBands(Graphics2D g2d) {
+        Cursor storedCursorType = this.getCursor();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         for (int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
                 if (model.isPlot(rangerXY.toMath(new Pixel(x, y)))) {
@@ -51,6 +53,7 @@ class ThreePointsPanel extends JPanel {
                 }
             }
         }
+        this.setCursor(storedCursorType);
     }
 
     private void paintFocuses(Graphics2D g2d) {
