@@ -80,13 +80,12 @@ class ThreePointsModel {
         if (userChoices.currentDrawingStyle != ThreePointsUserChoices.DrawingStyle.PRECISION) {
             return isWithinBand(point);
         }
-        // magic numbers chosen to obtain a reasonable drawing
+        List<Double> levels = new ArrayList<>();
+        // magic numbers hand-picked to obtain a reasonable drawing
         for (double level = 0.125; level < userChoices.getNumPts(); level += 0.5 / userChoices.getNumPts()) {
-            if (rasterMaker.crossesLevel(this::computeSumDistance, point, level)) {
-                return true;
-            }
+            levels.add(level);
         }
-        return false;
+        return rasterMaker.crossesLevels(this::computeSumDistance, point, levels);
     }
 
     private boolean isWithinBand(PlanePoint point) {
