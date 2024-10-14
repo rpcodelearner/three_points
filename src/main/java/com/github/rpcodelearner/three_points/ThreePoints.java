@@ -33,7 +33,7 @@ public class ThreePoints {
     private JFrame createAndSetupWindow() {
         JFrame frame = new JFrame();
         frame.setLocation(800, 150);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setUndecorated(false);
         frame.setResizable(true);
         frame.setTitle(ConfigAppStrings.getStringFor("AppWindowTitle"));
