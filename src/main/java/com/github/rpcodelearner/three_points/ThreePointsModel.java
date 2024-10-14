@@ -16,34 +16,34 @@ class ThreePointsModel {
 
     ThreePointsModel(ThreePointsUserChoices userChoices) {
         this.userChoices = userChoices;
-        computePoints(); // must call to initialize focalPoints
+        computeFoci(); // must call to initialize focalPoints
     }
 
     List<PlanePoint> getFoci() {
         return focalPoints;
     }
 
-    void computePoints() {
+    void computeFoci() {
         if (userChoices.getNumPts() == 1) {
             focalPoints = Collections.singletonList(new PlanePoint(xCenter, yCenter));
             return;
         }
         switch (userChoices.getFociPattern()) {
             case "Circular":
-                computePointsOnCircle();
+                computeFociOnCircle();
                 break;
             case "Random":
-                computeRandomPoints();
+                computeRandomFoci();
                 break;
             case "Aligned":
-                computeAlignedPoints();
+                computeAlignedFoci();
                 break;
             default:
                 throw new RuntimeException("Unexpected pattern for focal points: " + userChoices.getFociPattern());
         }
     }
 
-    private void computePointsOnCircle() {
+    private void computeFociOnCircle() {
         focalPoints = new ArrayList<>();
         final double angle = 2 * Math.PI / userChoices.getNumPts();
         for (int n = 0; n < userChoices.getNumPts(); n++) {
@@ -54,7 +54,7 @@ class ThreePointsModel {
         }
     }
 
-    private void computeAlignedPoints() {
+    private void computeAlignedFoci() {
         focalPoints = new ArrayList<>();
         final double step = (2 * RADIUS) / (userChoices.getNumPts() - 1);
         for (int i = 0; i < userChoices.getNumPts(); i++) {
@@ -63,7 +63,7 @@ class ThreePointsModel {
         }
     }
 
-    private void computeRandomPoints() {
+    private void computeRandomFoci() {
         focalPoints = new ArrayList<>();
         int i = 0;
         do {

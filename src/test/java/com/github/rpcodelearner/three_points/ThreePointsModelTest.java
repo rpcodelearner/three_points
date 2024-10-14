@@ -22,7 +22,7 @@ class ThreePointsModelTest {
     @Test
     void getFociOnePoint() {
         userChoices.setNumPts(1);
-        model.computePoints();
+        model.computeFoci();
         assertEquals(1, model.getFoci().size());
         assertEquals(0.0, model.getFoci().get(0).x, EPS);
         assertEquals(0.0, model.getFoci().get(0).y, EPS);
@@ -50,7 +50,7 @@ class ThreePointsModelTest {
     void alignedFoci() {
         userChoices.setNumPts(5); // easy test, so we also try more points
         userChoices.setFociPattern("Aligned");
-        model.computePoints();
+        model.computeFoci();
 
         assertEquals(5, model.getFoci().size());
 
@@ -70,7 +70,7 @@ class ThreePointsModelTest {
         // as random is unpredictable, we "test" that none of
         // the points coordinates matches "special" values
         userChoices.setFociPattern("Random");
-        model.computePoints();
+        model.computeFoci();
         for (PlanePoint pt : model.getFoci()) {
             assertNotEquals(0.0, pt.x, EPS);
             assertNotEquals(0.0, pt.y, EPS);
@@ -86,11 +86,11 @@ class ThreePointsModelTest {
     @Test
     void repeatedRandomFoci() {
         // as random is unpredictable, we "test" that successive
-        // calls to model.computePoints() give different sets of foci
+        // calls to model.computeFoci() give different sets of foci
         userChoices.setFociPattern("Random");
-        model.computePoints();
+        model.computeFoci();
         List<PlanePoint> firstRunFoci = model.getFoci();
-        model.computePoints();
+        model.computeFoci();
         List<PlanePoint> secondRunFoci = model.getFoci();
         doAllComparisons(firstRunFoci, secondRunFoci);
     }
@@ -108,7 +108,7 @@ class ThreePointsModelTest {
         // we test that bands looks circular for a single point
         userChoices.setNumPts(1);
         userChoices.setDrawingStyle("Medium");
-        model.computePoints();
+        model.computeFoci();
 
         for (double radius = 0.1 ; radius < RADIUS ; radius += 0.1) {
             PlanePoint referencePoint = new PlanePoint(0.0, radius);
@@ -127,7 +127,7 @@ class ThreePointsModelTest {
         // we test that a circle is drawn if there is one focus point
         userChoices.setNumPts(1);
         userChoices.setDrawingStyle("Precision");
-        model.computePoints();
+        model.computeFoci();
 
         double radius = findRadiusOfPaintedCircle(model);
         final int TEST_POINTS_AT_CURR_RADIUS = 1000; // for precision plot we want to try lots of points

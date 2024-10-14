@@ -52,7 +52,7 @@ class ThreePointsMenuBar extends JMenuBar {
             @Override
             public void focusLost(FocusEvent e) {
                 if (isNumPointsUpdated()) {
-                    model.computePoints();
+                    model.computeFoci();
                 }
                 numPointsInputField.setText(Integer.toString(userChoices.getNumPts()));
 
@@ -84,7 +84,7 @@ class ThreePointsMenuBar extends JMenuBar {
 
     public void selectPattern(ActionEvent ignoredChoice) {
         userChoices.setFociPattern((String) patternCtrl.getSelectedItem());
-        model.computePoints();
+        model.computeFoci();
         view.repaint();
     }
 
@@ -111,7 +111,7 @@ class ThreePointsMenuBar extends JMenuBar {
 
     private void changePointsNumber(ActionEvent ignoredTextInput) {
         if (isNumPointsUpdated()) {
-            model.computePoints();
+            model.computeFoci();
         }
         numPointsInputField.setText(Integer.toString(userChoices.getNumPts()));
         view.repaint();
@@ -166,7 +166,7 @@ class ThreePointsMenuBar extends JMenuBar {
                     numPointsInputField.setText(String.valueOf(currentNumPoints - 1));
                 }
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    model.computePoints();
+                    model.computeFoci();
                     view.repaint();
                 }
             }
@@ -178,7 +178,7 @@ class ThreePointsMenuBar extends JMenuBar {
                     if (getValidReading() != userChoices.getNumPts()) {
                         userChoices.setNumPts(getValidReading());
                     }
-                    model.computePoints();
+                    model.computeFoci();
                     view.repaint();
                 }
             }
