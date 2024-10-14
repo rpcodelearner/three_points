@@ -4,7 +4,7 @@ package com.github.rpcodelearner.three_points;
 import java.util.Objects;
 
 /**
- * PlanePoint holds a couple of double/s that represent mathematical coordinates in the plane
+ * A value object that represent mathematical coordinates in the plane
  */
 class PlanePoint {
     public final double x;

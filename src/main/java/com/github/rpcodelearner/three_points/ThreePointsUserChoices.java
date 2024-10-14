@@ -3,6 +3,9 @@ package com.github.rpcodelearner.three_points;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to store the current choices of the user
+ */
 class ThreePointsUserChoices {
     private int numPts = 3; // this default gives the app its name
     private FociPattern currentFociPattern = FociPattern.CIRCULAR;

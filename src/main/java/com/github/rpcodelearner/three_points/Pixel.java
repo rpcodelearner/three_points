@@ -2,6 +2,9 @@ package com.github.rpcodelearner.three_points;
 
 import java.util.Objects;
 
+/**
+ * A value object to store pixel coordinates
+ */
 class Pixel {
     public final int x;
     public final int y;

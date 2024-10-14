@@ -2,6 +2,9 @@ package com.github.rpcodelearner.three_points;
 
 import java.util.Properties;
 
+/**
+ * A singleton class to store strings used by the application
+ */
 class ConfigAppStrings {
     private static ConfigAppStrings INSTANCE;
     private final Properties appStrings;
@@ -16,14 +19,15 @@ class ConfigAppStrings {
         appStrings.setProperty("graphicsMenuLabel", "Drawing:");
 
         appStrings.setProperty("numPoints_Tooltip",
-                "<html>Number of focal points, put 2 for the classic ellipse" +
-                        "<br>Increase gradually, as computation takes longer for higher values." +
-                        "<br>You can use Up/Down arrows (but you also have to press Enter or move the focus away).</html>");
-        appStrings.setProperty("patternCtrl_Tooltip", "Focal points (the red points) will be located according to this pattern");
+                "<html>Number of focal points, put 2 for the classic ellipse." +
+                        "<br>Computation takes longer for higher values." +
+                        "<br>Use Up/Down (then press Enter or move focus away).</html>");
+        appStrings.setProperty("patternCtrl_Tooltip", "Focal points (the red points) will be located according to this pattern" +
+                "<br>Press F5 to update Random.");
         appStrings.setProperty("drawingCtrl_Tooltip",
                 "<html>Drawing style." +
-                        "<br><b>Thick</b>, <b>Medium</b> and <b>Fine</b> each draw a set of bands of roughly constant value." +
-                        "<br><b>Precision</b> draws a few lines of constant value.</html>");
+                        "<br><b>Thick</b>, <b>Medium</b>, <b>Fine</b>: draw bands of roughly constant values." +
+                        "<br><b>Precision</b>: draws a few lines of constant value.</html>");
     }
 
     public static String getStringFor(String key) {
