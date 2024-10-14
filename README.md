@@ -28,3 +28,8 @@ Choices:
   * Medium - as per Thick, but many smaller bands
   * Fine - as per Medium, but the bands are thinner
   * Precision - check if the value crosses a given "level" within the pixel being considered. It considers a number of such "levels", also depending on the number of foci. This method takes longer.
+
+### Controls
+The foci number can be set by typing the value or by using the Up/Down arrow keys. In either case, the value is read after Enter is pressed or the (keyboard) focus is moved to another control.
+
+Pressing F5 triggers the computation of the foci and the drawing of the figure; this is useful with the "Random" foci pattern. 
