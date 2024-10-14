@@ -32,4 +32,6 @@ Choices:
 ### Controls
 The foci number can be set by typing the value or by using the Up/Down arrow keys. In either case, the value is read after Enter is pressed or the (keyboard) focus is moved to another control.
 
-Pressing F5 triggers the computation of the foci and the drawing of the figure; this is useful with the "Random" foci pattern. 
+Pressing F5 triggers the computation of the foci and the drawing of the figure; this is useful with the "Random" foci pattern.
+
+Resize the window to see a different portion of the plane (no zoom function available).
