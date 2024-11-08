@@ -1,6 +1,11 @@
 # ThreePoints
 Given 3 focal points, it plots curves such that the sum of the distances to the focal points is a constant.
 
+## Build
+You can launch the gradle wrapper script appropriate for your environment: `gradlew` in a POSIX-compliant shell, or `gradlew.bat` for Windows.
+
+Alternatively, (ignore the gradle parts and) manually import the source code in your development enviroment. The only dependency outside the Java SE JDK is JUnit 5, which is required for the automated tests.
+
 ## User's choices
 You can select:
 * How many focal points (aka "foci")
